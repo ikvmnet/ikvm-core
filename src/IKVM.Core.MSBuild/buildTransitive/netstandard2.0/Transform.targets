@@ -38,7 +38,7 @@
         </Task>
     </UsingTask>
 
-    <Target Name="Transform" BeforeTargets="BeforeBuild" Inputs="@(Transform)" Outputs="@(Transform->'%(TargetPath)')" Condition=" '$(TargetFramework)' != '' ">
+    <Target Name="Transform" BeforeTargets="BeforeBuild" Inputs="@(Transform)" Outputs="@(Transform->'%(TargetPath)')" Condition=" '$(TargetFramework)' != '' And '@(Transform)' != '' ">
         <Transform Items="@(Transform)" Parameters="@(TransformValues)" />
     </Target>
 
