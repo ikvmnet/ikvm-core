@@ -1,5 +1,5 @@
 <Project>
 
-    <Import Project="$(MSBuildThisFileDirectory)src\IKVM.Core.MSBuild\buildTransitive\netstandard2.0\IKVM.Core.MSBuild.targets" />
+    <Import Project="$(MSBuildThisFileDirectory)src\IKVM.Core.MSBuild\build\netstandard2.0\IKVM.Core.MSBuild.targets" />
 
 </Project>
