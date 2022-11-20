@@ -60,7 +60,7 @@ jobs:
         key: ${{ runner.os }}-nuget-${{ hashFiles('**\*.csproj', '**\*.msbuildproj') }}-1
         restore-keys: ${{ runner.os }}-nuget-
     - name: NuGet Restore
-      run: dotnet restore IKVM.Maven.sln
+      run: dotnet restore IKVM.Core.sln
     - name: Build
       run: |
         dotnet msbuild /m /bl `
@@ -80,7 +80,7 @@ jobs:
           /p:CreateHardLinksForCopyLocalIfPossible=true `
           /p:CreateHardLinksForPublishFilesIfPossible=true `
           /p:ContinuousIntegrationBuild=true `
-          IKVM.Maven.dist.msbuildproj
+          IKVM.Core.dist.msbuildproj
     - name: Upload MSBuild Log
       if: ${{ always() }}
       uses: actions/upload-artifact@v3
@@ -100,79 +100,11 @@ jobs:
       with:
         name: tests
         path: dist/tests.tar.gz
-  test:
-    strategy:
-      matrix:
-        sys:
-        - windows
-        - linux
-        tfm:
-        - net48
-        - netcoreapp3.1
-        - net6.0
-        - net7.0
-        exclude:
-        - tfm: net48
-          sys: linux
-    name: Test (${{ matrix.sys }}:${{ matrix.tfm }})
-    needs:
-    - build
-    runs-on: ${{ fromJSON('{"windows":["windows-2022"],"linux":["ubuntu-22.04"]}')[matrix.sys] }}
-    steps:
-    - name: Setup .NET
-      shell: pwsh
-      run: Add-Content $env:GITHUB_ENV "`nDOTNET_INSTALL_DIR=${{ runner.temp }}/dotnet"
-    - name: Setup .NET 3.1
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 3.1.x
-    - name: Setup .NET 6.0
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 6.0.x
-    - name: Setup .NET 7.0
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 7.0.x
-    - name: Setup NuGet
-      shell: pwsh
-      run: Add-Content $env:GITHUB_ENV "`nNUGET_PACKAGES=${{ runner.temp }}\nuget\packages"
-    - name: Add NuGet Source (GitHub)
-      shell: pwsh
-      run: dotnet nuget add source --username USERNAME --password $env:GITHUB_TOKEN --store-password-in-clear-text --name ikvm $env:GITHUB_REPOS
-      env:
-        GITHUB_REPOS: https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - name: Download Tests
-      uses: actions/download-artifact@v3
-      with:
-        name: tests
-        path: dist
-    - name: Restore Tests
-      run: tar xzvf tests.tar.gz
-      working-directory: dist
-    - name: Execute Tests
-      timeout-minutes: 120
-      shell: pwsh
-      run: |
-        $tfm = "${{ matrix.tfm }}"
-        $sys = "${{ matrix.sys }}"
-        $tests = $(gci .\dist\tests\*\$tfm -Recurse -Filter '*.Tests.dll')
-        if ($tests) {
-            Add-Content $env:GITHUB_ENV "`nRET=TestResults--$tfm--$sys"
-            dotnet test -f $tfm --blame -v 2 --results-directory "TestResults" --logger:"console;verbosity=detailed" --logger:trx --collect "Code Coverage" $tests
-        }
-    - name: Upload Test Results
-      if: always() && startsWith(env.RET, 'TestResults--')
-      uses: actions/upload-artifact@v3
-      with:
-        name: ${{ env.RET }}
-        path: TestResults
   release:
     name: Release
-    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
+    if: github.ref == 'refs/heads/main'
     needs:
-    - test
+    - build
     runs-on: ubuntu-22.04
     steps:
     - name: Checkout Source
@@ -198,7 +130,7 @@ jobs:
         name: nuget
         path: dist/nuget
     - name: Create Release
-      if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' || github.event.head_commit.message == '+prerelease'
+      if: github.ref == 'refs/heads/main' || github.event.head_commit.message == '+push'
       uses: ncipollo/release-action@v1.11.2
       with:
         tag: ${{ steps.GitVersion.outputs.semVer }}
@@ -222,7 +154,7 @@ jobs:
         AZUREDEVOPS_REPOS: https://pkgs.dev.azure.com/ikvm-revived/ikvm/_packaging/ikvm-ci/nuget/v3/index.json
         AZUREDEVOPS_TOKEN: ${{ secrets.AZUREDEVOPS_PAT }}
     - name: Push NuGet
-      if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' || github.event.head_commit.message == '+prerelease'
+      if: github.ref == 'refs/heads/main' || github.event.head_commit.message == '+push'
       shell: pwsh
       run: dotnet nuget push dist/nuget/*.nupkg --source $env:NUGET_REPOS --api-key $env:NUGET_TOKEN --skip-duplicate
       env:
