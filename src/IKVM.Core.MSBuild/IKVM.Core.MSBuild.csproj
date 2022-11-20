@@ -19,16 +19,11 @@
 
     <ItemGroup>
         <Content Include="build\**\*" PackagePath="build\%(RecursiveDir)%(Filename)%(Extension)" />
+        <Content Include="lib\**\*" PackagePath="lib\%(RecursiveDir)%(Filename)%(Extension)" />
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="lib\netstandard.20\_._" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Content Include="lib\netstandard.20\_._">
-        <PackagePath>build\%(RecursiveDir)%(Filename)%(Extension)</PackagePath>
-      </Content>
+      <None Remove="lib\netstandard2.0\_._" />
     </ItemGroup>
 
     <ItemGroup>
