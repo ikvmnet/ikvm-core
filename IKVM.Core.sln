@@ -1,0 +1,57 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32505.173
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{90150B24-0F40-41BB-95EF-D95F50BF06BE}"
+	ProjectSection(SolutionItems) = preProject
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		.gitmodules = .gitmodules
+		Directory.Build.props = Directory.Build.props
+		Directory.Build.targets = Directory.Build.targets
+		GitVersion.yml = GitVersion.yml
+		global.json = global.json
+		.github\workflows\IKVM.Core.yml = .github\workflows\IKVM.Core.yml
+		LICENSE.md = LICENSE.md
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dist", "dist", "{2B1DC931-2EBF-4544-8076-3C7BF5870163}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dist-nuget", "src\dist-nuget\dist-nuget.csproj", "{9DC62B51-6F8F-4764-B29E-588AFE9EE643}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dist-tests", "src\dist-tests\dist-tests.csproj", "{7CF45054-BD9C-4874-8A4B-3C2BE86FDB25}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IKVM.Core.MSBuild", "src\IKVM.Core.MSBuild\IKVM.Core.MSBuild.csproj", "{E37183B3-E98D-4A30-94C8-FD1CA2A1F828}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9DC62B51-6F8F-4764-B29E-588AFE9EE643}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9DC62B51-6F8F-4764-B29E-588AFE9EE643}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9DC62B51-6F8F-4764-B29E-588AFE9EE643}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9DC62B51-6F8F-4764-B29E-588AFE9EE643}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7CF45054-BD9C-4874-8A4B-3C2BE86FDB25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CF45054-BD9C-4874-8A4B-3C2BE86FDB25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CF45054-BD9C-4874-8A4B-3C2BE86FDB25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CF45054-BD9C-4874-8A4B-3C2BE86FDB25}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E37183B3-E98D-4A30-94C8-FD1CA2A1F828}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E37183B3-E98D-4A30-94C8-FD1CA2A1F828}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E37183B3-E98D-4A30-94C8-FD1CA2A1F828}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E37183B3-E98D-4A30-94C8-FD1CA2A1F828}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9DC62B51-6F8F-4764-B29E-588AFE9EE643} = {2B1DC931-2EBF-4544-8076-3C7BF5870163}
+		{7CF45054-BD9C-4874-8A4B-3C2BE86FDB25} = {2B1DC931-2EBF-4544-8076-3C7BF5870163}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A03ACB78-6C3F-4E09-BAF1-16E41D5A3945}
+	EndGlobalSection
+EndGlobal

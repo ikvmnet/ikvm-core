@@ -1,0 +1,45 @@
+﻿<Project>
+    <PropertyGroup>
+        <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    </PropertyGroup>
+
+    <!-- Transforms the contents of a file using a #PARAMETER# replacement strategy. -->
+    <UsingTask TaskName="Transform" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+        <ParameterGroup>
+            <Items ParameterType="Microsoft.Build.Framework.ITaskItem[]" Required="true" />
+            <Parameters ParameterType="Microsoft.Build.Framework.ITaskItem[]" Required="true" />
+        </ParameterGroup>
+        <Task>
+            <Using Namespace="System" />
+            <Using Namespace="System.IO" />
+            <Code Type="Fragment" Language="cs">
+                <![CDATA[
+                foreach (var file in Items)
+                {
+                    var i = file.ItemSpec;
+                    var o = file.GetMetadata("TargetPath");
+                    var c = File.ReadAllText(i);
+                    foreach (var parameter in Parameters)
+                    {
+                        var n = parameter.ItemSpec;
+                        var v = parameter.GetMetadata("Value");
+                        c = c.Replace($"#{n}#", v);
+                    }
+                    
+                    // check that there is actually a change
+                    if (File.Exists(o) && File.ReadAllText(o) == c)
+                        continue;
+                    
+                    Directory.CreateDirectory(Path.GetDirectoryName(o));
+                    File.WriteAllText(o, c);
+                }
+                ]]>
+            </Code>
+        </Task>
+    </UsingTask>
+
+    <Target Name="Transform" BeforeTargets="BeforeBuild" Inputs="@(Transform)" Outputs="@(Transform->'%(TargetPath)')" Condition=" '$(TargetFramework)' != '' ">
+        <Transform Items="@(Transform)" Parameters="@(TransformValues)" />
+    </Target>
+
+</Project>
