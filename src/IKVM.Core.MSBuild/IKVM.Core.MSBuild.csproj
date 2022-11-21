@@ -19,11 +19,9 @@
 
     <ItemGroup>
         <Content Include="build\**\*" PackagePath="build\%(RecursiveDir)%(Filename)%(Extension)" />
+        <Content Include="buildMultiTargeting\**\*" PackagePath="buildMultiTargeting\%(RecursiveDir)%(Filename)%(Extension)" />
+        <Content Include="targets\**\*" PackagePath="targets\%(RecursiveDir)%(Filename)%(Extension)" />
         <Content Include="lib\**\*" PackagePath="lib\%(RecursiveDir)%(Filename)%(Extension)" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Remove="lib\netstandard2.0\_._" />
     </ItemGroup>
 
     <ItemGroup>
