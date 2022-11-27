@@ -7,7 +7,18 @@
         <___GenerateDepsFileExtensionsCs>$([System.IO.File]::ReadAllText('$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)', '..', '..', 'IKVM.Core.MSBuild.Tasks', 'GenerateDepsFileExtensions.cs'))'))</___GenerateDepsFileExtensionsCs>
     </PropertyGroup>
 
-    <UsingTask TaskName="GenerateDepsFileExtensions" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+    <UsingTask TaskName="GenerateDepsFileExtensions" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll"  Condition=" '$(MSBuildRuntimeType)' == 'Core' ">
+        <Task>
+            <Reference Include="$(NuGetPackageRoot)Microsoft.Extensions.DependencyModel\7.0.0\lib\netstandard2.0\Microsoft.Extensions.DependencyModel.dll" />
+            <Code Type="Class" Language="CS">
+                <![CDATA[
+$([MSBuild]::Unescape('$(___GenerateDepsFileExtensionsCs)'))
+            ]]>
+            </Code>
+        </Task>
+    </UsingTask>
+    
+    <UsingTask TaskName="GenerateDepsFileExtensions" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll"  Condition=" '$(MSBuildRuntimeType)' != 'Core' ">
         <Task>
             <Reference Include="$(MicrosoftNETBuildTasksDirectory)Microsoft.Extensions.DependencyModel.dll" />
             <Code Type="Class" Language="CS">
