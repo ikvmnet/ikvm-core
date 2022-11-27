@@ -4,8 +4,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Remove="Microsoft.Extensions.DependencyModel" />
-        <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="6.0.0" GeneratePathProperty="true" />
+        <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="6.0.0" GeneratePathProperty="true">
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
     </ItemGroup>
 
     <PropertyGroup>
