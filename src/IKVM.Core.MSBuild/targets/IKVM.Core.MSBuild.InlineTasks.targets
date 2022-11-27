@@ -3,16 +3,13 @@
         <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
     </PropertyGroup>
 
-    <PropertyGroup>
-        <___GenerateDepsFileExtensionsCs>$([System.IO.File]::ReadAllText('$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)', '..', '..', 'IKVM.Core.MSBuild.Tasks', 'GenerateDepsFileExtensions.cs'))'))</___GenerateDepsFileExtensionsCs>
-    </PropertyGroup>
-
     <ItemGroup>
         <PackageReference Remove="Microsoft.Extensions.DependencyModel" />
         <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="6.0.0" GeneratePathProperty="true" />
     </ItemGroup>
 
     <PropertyGroup>
+        <___GenerateDepsFileExtensionsCs>$([System.IO.File]::ReadAllText('$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)', '..', '..', 'IKVM.Core.MSBuild.Tasks', 'GenerateDepsFileExtensions.cs'))'))</___GenerateDepsFileExtensionsCs>
         <___MicrosoftExtensionDependencyModelAssemblyPath>$(PkgMicrosoft_Extensions_DependencyModel)\lib\netstandard2.0\Microsoft.Extensions.DependencyModel.dll</___MicrosoftExtensionDependencyModelAssemblyPath>
     </PropertyGroup>
     
