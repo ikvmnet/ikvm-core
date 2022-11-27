@@ -123,9 +123,9 @@
             // merge in new items
             foreach (var addl in AdditionalRuntimeNativeAssets.Where(i => i.GetMetadata(METADATA_LIBRARY_NAME) == name && i.GetMetadata(METADATA_LIBRARY_VERSION) == version))
             {
-                if (addl.GetMetadata(METADATA_LIBRARY_TYPE) is string _type && _type is not "")
+                if (addl.GetMetadata(METADATA_LIBRARY_TYPE) is string _type and not null)
                     type ??= _type;
-                if (addl.GetMetadata(METADATA_LIBRARY_PATH) is string _path && _path is not "")
+                if (addl.GetMetadata(METADATA_LIBRARY_PATH) is string _path and not null)
                     path ??= _path;
             }
 
