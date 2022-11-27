@@ -134,7 +134,7 @@
             if (string.IsNullOrEmpty(path))
                 path = null;
             if (string.IsNullOrEmpty(hash))
-                hash = null;
+                hash = "";
             if (string.IsNullOrEmpty(hashPath))
                 hashPath = null;
 
