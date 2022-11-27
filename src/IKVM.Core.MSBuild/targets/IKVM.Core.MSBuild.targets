@@ -41,6 +41,10 @@
         </Task>
     </UsingTask>
 
+    <Import Project="$(MSBuildThisFileDirectory)IKVM.Core.MSBuild.Tasks.targets" Condition=" '$(UseIkvmCoreTasks)' != 'false' "/>
+    <Import Project="$(MSBuildThisFileDirectory)IKVM.Core.MSBuild.InlineTasks.targets" Condition=" '$(UseIkvmCoreTasks)' == 'false' "/>
+
+    <Import Project="$(MSBuildThisFileDirectory)GenerateBuildDependencyFileExtensions.targets" />
     <Import Project="$(MSBuildThisFileDirectory)Transform.targets" />
     <Import Project="$(MSBuildThisFileDirectory)IncludeProjectReference.targets" />
     <Import Project="$(MSBuildThisFileDirectory)LibProjectReference.targets" />

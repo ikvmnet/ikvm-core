@@ -1,0 +1,16 @@
+﻿<Project>
+    <PropertyGroup>
+        <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <IkvmCoreMSBuildTaskFolder Condition=" '$(MSBuildRuntimeType)' == 'Core' ">netcoreapp3.1</IkvmCoreMSBuildTaskFolder>
+        <IkvmCoreMSBuildTaskFolder Condition=" '$(MSBuildRuntimeType)' != 'Core' ">net472</IkvmCoreMSBuildTaskFolder>
+        <IkvmCoreMSBuildTaskFactory Condition=" '$(MSBuildRuntimeType)' == 'Core' "></IkvmCoreMSBuildTaskFactory>
+        <IkvmCoreMSBuildTaskFactory Condition=" '$(MSBuildRuntimeType)' != 'Core' ">TaskHostFactory</IkvmCoreMSBuildTaskFactory>
+        <IkvmCoreMSBuildTaskAssembly>$(MSBuildThisFileDirectory)..\..\tasks\$(IkvmCoreMSBuildTaskFolder)\IKVM.Core.MSBuild.Tasks.dll</IkvmCoreMSBuildTaskAssembly>
+    </PropertyGroup>
+
+    <UsingTask TaskName="GenerateDepsFileExtensions" AssemblyFile="$(IkvmCoreMSBuildTaskAssembly)" TaskFactory="$(IkvmCoreMSBuildTaskFactory)" Condition="Exists('$(IkvmCoreMSBuildTaskAssembly)')" />
+
+</Project>
