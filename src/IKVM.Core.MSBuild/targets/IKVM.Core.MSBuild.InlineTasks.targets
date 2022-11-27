@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <___MicrosoftExtensionDependencyModelAssemblyPath Condition=" '$(MSBuildRuntimeType)' == 'Core' ">$(NuGetPackageRoot)Microsoft.Extensions.DependencyModel\7.0.0\lib\netstandard2.0\Microsoft.Extensions.DependencyModel.dll</___MicrosoftExtensionDependencyModelAssemblyPath>
+        <___MicrosoftExtensionDependencyModelAssemblyPath Condition=" '$(MSBuildRuntimeType)' == 'Core' ">$(NuGetPackageRoot)\Microsoft.Extensions.DependencyModel\7.0.0\lib\netstandard2.0\Microsoft.Extensions.DependencyModel.dll</___MicrosoftExtensionDependencyModelAssemblyPath>
         <___MicrosoftExtensionDependencyModelAssemblyPath Condition=" '$(MSBuildRuntimeType)' != 'Core' ">$(MicrosoftNETBuildTasksDirectory)Microsoft.Extensions.DependencyModel.dll</___MicrosoftExtensionDependencyModelAssemblyPath>
     </PropertyGroup>
     
