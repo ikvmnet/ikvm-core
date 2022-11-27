@@ -25,14 +25,17 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dist-tests", "src\dist-tests\dist-tests.csproj", "{7CF45054-BD9C-4874-8A4B-3C2BE86FDB25}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IKVM.Core.MSBuild", "src\IKVM.Core.MSBuild\IKVM.Core.MSBuild.csproj", "{E37183B3-E98D-4A30-94C8-FD1CA2A1F828}"
+	ProjectSection(ProjectDependencies) = postProject
+		{928B6690-5AF7-4EBD-ADF7-BEAF58826A5E} = {928B6690-5AF7-4EBD-ADF7-BEAF58826A5E}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IKVM.Core.MSBuild.Sample", "src\IKVM.Core.MSBuild.Sample\IKVM.Core.MSBuild.Sample.csproj", "{6D523EFF-8672-4D6B-AE50-95A480C61DCE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IKVM.Core.MSBuild.Sample", "src\IKVM.Core.MSBuild.Sample\IKVM.Core.MSBuild.Sample.csproj", "{6D523EFF-8672-4D6B-AE50-95A480C61DCE}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IKVM.Core.MSBuild.Sample.Lib", "src\IKVM.Core.MSBuild.Sample.Lib\IKVM.Core.MSBuild.Sample.Lib.vcxproj", "{C7C31000-CBDC-4899-947F-D528544AB8B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IKVM.Core.MSBuild.Tasks", "src\IKVM.Core.MSBuild.Tasks\IKVM.Core.MSBuild.Tasks.csproj", "{928B6690-5AF7-4EBD-ADF7-BEAF58826A5E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IKVM.Core.MSBuild.Tasks", "src\IKVM.Core.MSBuild.Tasks\IKVM.Core.MSBuild.Tasks.csproj", "{928B6690-5AF7-4EBD-ADF7-BEAF58826A5E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IKVM.Core.MSBuild.Tasks.Test", "src\IKVM.Core.MSBuild.Tasks.Test\IKVM.Core.MSBuild.Tasks.Test.csproj", "{4DA00B4C-11E4-4F43-AFF1-90F33B7C74CC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IKVM.Core.MSBuild.Tasks.Test", "src\IKVM.Core.MSBuild.Tasks.Test\IKVM.Core.MSBuild.Tasks.Test.csproj", "{4DA00B4C-11E4-4F43-AFF1-90F33B7C74CC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
