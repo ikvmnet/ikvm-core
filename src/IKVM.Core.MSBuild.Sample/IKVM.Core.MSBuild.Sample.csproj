@@ -9,6 +9,7 @@
             <SetTargetFramework>TargetFramework=net6.0</SetTargetFramework>
             <SetRuntimeIdentifier>RuntimeIdentifier=win7-x64</SetRuntimeIdentifier>
             <PublishTargetPath>app</PublishTargetPath>
+            <PublishItemMetadata>Foo=Bar</PublishItemMetadata>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <PublishPackagePath>app\foo\bar</PublishPackagePath>
             <Pack>true</Pack>

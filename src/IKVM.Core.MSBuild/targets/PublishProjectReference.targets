@@ -34,7 +34,8 @@
         <ItemGroup>
             <__PublishProjectReference Remove="@(__PublishProjectReference)" />
             <__PublishProjectReference Include="@(_PublishProjectReferenceWithConfiguration)">
-                <ProjectName>$([System.IO.Path]::GetFileNameWithoutExtension('%(Identity)'))</ProjectName>
+                <PublishProjectIdentity>%(Identity)</PublishProjectIdentity>
+                <PublishProjectName>$([System.IO.Path]::GetFileNameWithoutExtension('%(Identity)'))</PublishProjectName>
                 <PublishTargetPath Condition=" '%(_PublishProjectReferenceWithConfiguration.PublishTargetPath)' != '' ">$([MSBuild]::EnsureTrailingSlash('%(_PublishProjectReferenceWithConfiguration.PublishTargetPath)'))</PublishTargetPath>
                 <PublishPackagePath Condition=" '%(_PublishProjectReferenceWithConfiguration.PublishPackagePath)' != '' ">$([MSBuild]::EnsureTrailingSlash('%(_PublishProjectReferenceWithConfiguration.PublishPackagePath)'))</PublishPackagePath>
             </__PublishProjectReference>
@@ -91,7 +92,7 @@
         </ItemGroup>
     </Target>
 
-    <Target Name="GetPublishProjectReferenceOutputItems" DependsOnTargets="GetPublishProjectReferenceItems" BeforeTargets="_GetPackageFiles" Inputs="@(_PublishProjectReferenceItems)" Outputs="%(_PublishProjectReferenceItems.Identity)\%(_PublishProjectReferenceItems._Index)\%(_PublishProjectReferenceItems.PublishItemGroup)\null" Condition=" '$(DesignTimeBuild)' != 'true' And '@(_PublishProjectReferenceItems)' != '' ">
+    <Target Name="GetPublishProjectReferenceOutputItems" DependsOnTargets="GetPublishProjectReferenceItems" BeforeTargets="_GetPackageFiles" Inputs="@(_PublishProjectReferenceItems)" Outputs="%(_PublishProjectReferenceItems.PublishIdentity)\%(_PublishProjectReferenceItems._Index)\%(_PublishProjectReferenceItems.PublishItemGroup)\null" Condition=" '$(DesignTimeBuild)' != 'true' And '@(_PublishProjectReferenceItems)' != '' ">
         <ItemGroup>
             <_PublishProjectItems Include="@(_PublishProjectReferenceItems)">
                 <TargetPath Condition=" '%(_PublishProjectReferenceItems.PublishTargetPath)' == '' "></TargetPath>
@@ -100,7 +101,7 @@
                 <PackagePath Condition=" '%(_PublishProjectReferenceItems.PublishPackagePath)' != '' ">$([MSBuild]::MakeRelative('.', '%(_PublishProjectReferenceItems.PublishPackagePath)%(_PublishProjectReferenceItems.TargetPath)'))</PackagePath>
             </_PublishProjectItems>
         </ItemGroup>
-        <CreateItem Include="@(_PublishProjectItems)">
+        <CreateItem Include="@(_PublishProjectItems)" AdditionalMetadata="%(_PublishProjectReferenceItems.PublishItemMetadata)">
             <Output TaskParameter="Include" ItemName="%(_PublishProjectReferenceItems.PublishItemGroup)" />
         </CreateItem>
     </Target>
