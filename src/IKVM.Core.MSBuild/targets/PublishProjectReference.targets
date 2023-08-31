@@ -135,10 +135,7 @@
     <PropertyGroup>
         <AssignTargetPathsDependsOn>
             $(AssignTargetPathsDependsOn);
-            AssignPublishProjectConfiguration;
-            GetPublishProjectReferences;
-            GetPublishProjectReferenceItems;
-            GetPublishProjectReferenceOutputItems;
+            CollectPublishProjectReferenceItems;
         </AssignTargetPathsDependsOn>
     </PropertyGroup>
 
