@@ -63,7 +63,7 @@
         </Task>
     </UsingTask>
 
-    <Target Name="GetPublishProjectReferenceItems" DependsOnTargets="GetPublishProjectReferences" Inputs="@(_PublishProjectReference)" Outputs="%(_PublishProjectReference.Identity)\%(_PublishProjectReference._Index)\null" Condition=" '$(DesignTimeBuild)' != 'true' And '@(_PublishProjectReference)' != '' ">
+    <Target Name="GetPublishProjectReferenceItems" DependsOnTargets="$(GetPublishProjectReferenceItemsDependsOn)" Inputs="@(_PublishProjectReference)" Outputs="%(_PublishProjectReference.Identity)\%(_PublishProjectReference._Index)\null" Condition=" '$(DesignTimeBuild)' != 'true' And '@(_PublishProjectReference)' != '' ">
         <ItemGroup>
             <_PublishProjectReferencesToPublishTarget Remove="@(_PublishProjectReferencesToPublishTarget)" />
             <_PublishProjectReferencesToPublishTarget Include="@(_PublishProjectReference)">
@@ -89,8 +89,15 @@
             </_PublishProjectReferenceItems>
         </ItemGroup>
     </Target>
+    
+    <PropertyGroup>
+        <GetPublishProjectReferenceItemsDependsOn>
+            $(GetPublishProjectReferenceItemsDependsOn);
+            GetPublishProjectReferences;
+        </GetPublishProjectReferenceItemsDependsOn>
+    </PropertyGroup>
 
-    <Target Name="GetPublishProjectReferenceOutputItems" DependsOnTargets="GetPublishProjectReferenceItems" BeforeTargets="_GetPackageFiles" Inputs="@(_PublishProjectReferenceItems)" Outputs="%(_PublishProjectReferenceItems.PublishIdentity)\%(_PublishProjectReferenceItems._Index)\%(_PublishProjectReferenceItems.PublishItemGroup)\null" Condition=" '$(DesignTimeBuild)' != 'true' And '@(_PublishProjectReferenceItems)' != '' ">
+    <Target Name="GetPublishProjectReferenceOutputItems" DependsOnTargets="$(GetPublishProjectReferenceOutputItemsDependsOn)" BeforeTargets="_GetPackageFiles" Inputs="@(_PublishProjectReferenceItems)" Outputs="%(_PublishProjectReferenceItems.PublishIdentity)\%(_PublishProjectReferenceItems._Index)\%(_PublishProjectReferenceItems.PublishItemGroup)\null" Condition=" '$(DesignTimeBuild)' != 'true' And '@(_PublishProjectReferenceItems)' != '' ">
         <ItemGroup>
             <_PublishProjectItems Include="@(_PublishProjectReferenceItems)">
                 <TargetPath Condition=" '%(_PublishProjectReferenceItems.PublishTargetPath)' == '' "></TargetPath>
@@ -104,27 +111,34 @@
         </CreateItem>
     </Target>
 
-    <Target Name="GetPublishProjectReferenceItemsForPack" BeforeTargets="_GetPackageFiles" DependsOnTargets="$(GetPublishProjectReferenceItemsForPackDependsOn)" Condition=" '$(DesignTimeBuild)' != 'true' ">
-        
+    <PropertyGroup>
+        <GetPublishProjectReferenceOutputItemsDependsOn>
+            $(GetPublishProjectReferenceOutputItems);
+            GetPublishProjectReferenceItems;
+        </GetPublishProjectReferenceOutputItemsDependsOn>
+    </PropertyGroup>
+
+    <Target Name="CollectPublishProjectReferenceItems" BeforeTargets="_GetPackageFiles" DependsOnTargets="$(CollectPublishProjectReferenceItemsDependsOn)" Condition=" '$(DesignTimeBuild)' != 'true' ">
+
     </Target>
 
     <PropertyGroup>
-        <GetPublishProjectReferenceItemsForPackDependsOn>
-            $(GetPublishProjectReferenceItemsForPackDependsOn);
+        <CollectPublishProjectReferenceItemsDependsOn>
+            $(CollectPublishProjectReferenceItemsDependsOn);
             AssignPublishProjectConfiguration;
             GetPublishProjectReferences;
             GetPublishProjectReferenceItems;
             GetPublishProjectReferenceOutputItems;
-        </GetPublishProjectReferenceItemsForPackDependsOn>
+        </CollectPublishProjectReferenceItemsDependsOn>
     </PropertyGroup>
-    
-     <PropertyGroup>
+
+    <PropertyGroup>
         <AssignTargetPathsDependsOn>
+            $(AssignTargetPathsDependsOn);
             AssignPublishProjectConfiguration;
             GetPublishProjectReferences;
             GetPublishProjectReferenceItems;
             GetPublishProjectReferenceOutputItems;
-            $(AssignTargetPathsDependsOn);
         </AssignTargetPathsDependsOn>
     </PropertyGroup>
 
