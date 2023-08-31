@@ -91,7 +91,9 @@
     <Target Name="GetPublishProjectReferenceOutputItems" DependsOnTargets="GetPublishProjectReferenceItems" BeforeTargets="_GetPackageFiles" Condition=" '$(DesignTimeBuild)' != 'true' And '@(_PublishProjectReferenceItems)' != '' ">
         <ItemGroup>
             <None Include="@(_PublishProjectReferenceItems)">
+                <TargetPath Condition=" '%(_PublishProjectReferenceItems.PublishTargetPath)' == '' "></TargetPath>
                 <TargetPath Condition=" '%(_PublishProjectReferenceItems.PublishTargetPath)' != '' ">$([MSBuild]::MakeRelative('.', '%(_PublishProjectReferenceItems.PublishTargetPath)%(_PublishProjectReferenceItems.TargetPath)'))</TargetPath>
+                <PackagePath Condition=" '%(_PublishProjectReferenceItems.PublishPackagePath)' == '' "></PackagePath>
                 <PackagePath Condition=" '%(_PublishProjectReferenceItems.PublishPackagePath)' != '' ">$([MSBuild]::MakeRelative('.', '%(_PublishProjectReferenceItems.PublishPackagePath)%(_PublishProjectReferenceItems.TargetPath)'))</PackagePath>
             </None>
         </ItemGroup>
