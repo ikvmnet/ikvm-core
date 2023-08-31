@@ -70,7 +70,7 @@
                 <Properties>%(_PublishProjectReference.SetConfiguration);%(_PublishProjectReference.SetPlatform);%(_PublishProjectReference.SetTargetFramework);%(_PublishProjectReference.SetRuntimeIdentifier)</Properties>
             </_PublishProjectReferencesToPublishTarget>
         </ItemGroup>
-        <MSBuild Projects="@(_PublishProjectReferencesToPublishTarget)" Targets="GetPublishProjectPath" BuildInParallel="$(BuildInParallel)" RemoveProperties="$(_GlobalPropertiesToRemoveFromProjectReferences)" RebaseOutputs="true">
+        <MSBuild Projects="@(_PublishProjectReferencesToPublishTarget)" Targets="Publish;GetPublishProjectPath" BuildInParallel="$(BuildInParallel)" RemoveProperties="$(_GlobalPropertiesToRemoveFromProjectReferences)" RebaseOutputs="true">
             <Output TaskParameter="TargetOutputs" ItemName="_ResolvedPublishProjectReferencePublishDir" />
         </MSBuild>
         <PropertyGroup>
