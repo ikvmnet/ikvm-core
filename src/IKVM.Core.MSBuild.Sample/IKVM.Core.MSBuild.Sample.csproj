@@ -1,32 +1,23 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFrameworks>net461;netcoreapp3.1;net6.0</TargetFrameworks>
     </PropertyGroup>
 
     <ItemGroup>
-        <LibProjectReference Include="..\IKVM.Core.MSBuild.Sample.Lib\IKVM.Core.MSBuild.Sample.Lib.vcxproj">
-            <SetPlatform>Platform=x64</SetPlatform>
-            <LibTargetPath>runtimes\win7-x64\native</LibTargetPath>
+        <PublishProjectReference Include="..\IKVM.Core.MSBuild.Sample.App\IKVM.Core.MSBuild.Sample.App.csproj">
+            <SetTargetFramework>TargetFramework=net6.0</SetTargetFramework>
+            <SetRuntimeIdentifier>RuntimeIdentifier=win7-x64</SetRuntimeIdentifier>
+            <PublishTargetPath>app</PublishTargetPath>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <PublishPackagePath>app\foo\bar</PublishPackagePath>
             <Pack>true</Pack>
-        </LibProjectReference>
+        </PublishProjectReference>
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Mono.Posix" Version="7.1.0-final.1.21458.1" />
         <PackageReference Include="Mono.Unix" Version="7.1.0-final.1.21458.1" />
     </ItemGroup>
-
-    <Target Name="ResolveLibBuildDependencyFileExtensions" BeforeTargets="ResolveBuildDependencyFileExtensions">
-        <ItemGroup>
-            <AdditionalRuntimeNativeAssets Include="runtimes/win7-x64/native/IKVM.Core.MSBuild.Sample.Lib.dll">
-                <LibraryName>IKVM.Core.MSBuild.Sample.Lib</LibraryName>
-                <LibraryVersion>1.0.0</LibraryVersion>
-                <LibraryType>project</LibraryType>
-                <LibraryPath>ikvm.core.msbuild.sample.lib/1.0.0</LibraryPath>
-                <Runtime>win7-x64</Runtime>
-            </AdditionalRuntimeNativeAssets>
-        </ItemGroup>
-    </Target>
 
 </Project>
