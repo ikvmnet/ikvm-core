@@ -18,7 +18,7 @@
         </PropertyGroup>
     </Target>
 
-    <Target Name="AssignPublishProjectConfiguration" Condition=" '@(PublishProjectReference)' != '' ">
+    <Target Name="AssignPublishProjectConfiguration" Condition=" '$(DesignTimeBuild)' != 'true' And '@(PublishProjectReference)' != '' ">
         <PropertyGroup>
             <OnlyReferenceAndBuildProjectsEnabledInSolutionConfiguration Condition="'$(OnlyReferenceAndBuildProjectsEnabledInSolutionConfiguration)' == ''">true</OnlyReferenceAndBuildProjectsEnabledInSolutionConfiguration>
             <ShouldUnsetParentConfigurationAndPlatform Condition="'$(ShouldUnsetParentConfigurationAndPlatform)' == '' and ('$(BuildingInsideVisualStudio)' == 'true' or '$(BuildingSolutionFile)' == 'true')">true</ShouldUnsetParentConfigurationAndPlatform>
@@ -30,7 +30,7 @@
         </AssignProjectConfiguration>
     </Target>
 
-    <Target Name="GetPublishProjectReferences" DependsOnTargets="AssignPublishProjectConfiguration" Condition=" '@(_PublishProjectReferenceWithConfiguration)' != '' ">
+    <Target Name="GetPublishProjectReferences" DependsOnTargets="AssignPublishProjectConfiguration" Condition=" '$(DesignTimeBuild)' != 'true' And '@(_PublishProjectReferenceWithConfiguration)' != '' ">
         <ItemGroup>
             <__PublishProjectReference Include="@(_PublishProjectReferenceWithConfiguration)">
                 <ProjectName>$([System.IO.Path]::GetFileNameWithoutExtension('%(Identity)'))</ProjectName>
@@ -63,7 +63,7 @@
         </Task>
     </UsingTask>
 
-    <Target Name="GetPublishProjectReferenceItems" DependsOnTargets="GetPublishProjectReferences" Inputs="@(_PublishProjectReference)" Outputs="%(_PublishProjectReference.Identity)\%(_PublishProjectReference.Index)\null" Condition=" '@(_PublishProjectReference)' != '' ">
+    <Target Name="GetPublishProjectReferenceItems" DependsOnTargets="GetPublishProjectReferences" Inputs="@(_PublishProjectReference)" Outputs="%(_PublishProjectReference.Identity)\%(_PublishProjectReference.Index)\null" Condition=" '$(DesignTimeBuild)' != 'true' And '@(_PublishProjectReference)' != '' ">
         <ItemGroup>
             <_PublishProjectReferencesToPublishTarget Include="@(_PublishProjectReference)">
                 <Properties>%(_PublishProjectReference.SetConfiguration);%(_PublishProjectReference.SetPlatform);%(_PublishProjectReference.SetTargetFramework);%(_PublishProjectReference.SetRuntimeIdentifier)</Properties>
@@ -88,7 +88,7 @@
         </ItemGroup>
     </Target>
 
-    <Target Name="GetPublishProjectReferenceOutputItems" DependsOnTargets="GetPublishProjectReferenceItems" BeforeTargets="_GetPackageFiles" Condition=" '@(_PublishProjectReferenceItems)' != '' ">
+    <Target Name="GetPublishProjectReferenceOutputItems" DependsOnTargets="GetPublishProjectReferenceItems" BeforeTargets="_GetPackageFiles" Condition=" '$(DesignTimeBuild)' != 'true' And '@(_PublishProjectReferenceItems)' != '' ">
         <ItemGroup>
             <None Include="@(_PublishProjectReferenceItems)">
                 <TargetPath Condition=" '%(_PublishProjectReferenceItems.PublishTargetPath)' != '' ">$([MSBuild]::MakeRelative('.', '%(_PublishProjectReferenceItems.PublishTargetPath)%(_PublishProjectReferenceItems.TargetPath)'))</TargetPath>
@@ -97,7 +97,7 @@
         </ItemGroup>
     </Target>
 
-    <Target Name="GetPublishProjectReferenceItemsForPack" BeforeTargets="_GetPackageFiles" DependsOnTargets="$(GetPublishProjectReferenceItemsForPackDependsOn)">
+    <Target Name="GetPublishProjectReferenceItemsForPack" BeforeTargets="_GetPackageFiles" DependsOnTargets="$(GetPublishProjectReferenceItemsForPackDependsOn)" Condition=" '$(DesignTimeBuild)' != 'true' ">
         
     </Target>
 
