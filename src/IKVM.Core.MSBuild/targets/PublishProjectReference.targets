@@ -57,9 +57,7 @@
             <Code Type="Fragment" Language="cs">
                 <![CDATA[
                 foreach (var item in Items)
-                    foreach (string metadataName in Project.MetadataNames)
-                        if (string.IsNullOrEmpty(item.GetMetadata(metadataName)))
-                            item.SetMetadata(metadataName, Project.GetMetadata(metadataName));
+                    Project.CopyMetadataTo(item);
                 ]]>
             </Code>
         </Task>
