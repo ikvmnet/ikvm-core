@@ -100,6 +100,8 @@
     <Target Name="GetPublishProjectReferenceOutputItems" DependsOnTargets="$(GetPublishProjectReferenceOutputItemsDependsOn)" BeforeTargets="_GetPackageFiles" Inputs="@(_PublishProjectReferenceItems)" Outputs="%(_PublishProjectReferenceItems.PublishIdentity)\%(_PublishProjectReferenceItems._Index)\%(_PublishProjectReferenceItems.PublishItemGroup)\null" Condition=" '$(DesignTimeBuild)' != 'true' And '@(_PublishProjectReferenceItems)' != '' ">
         <ItemGroup>
             <_PublishProjectItems Include="@(_PublishProjectReferenceItems)">
+                <OriginalTargetPath>%(_PublishProjectReferenceItems.TargetPath)</OriginalTargetPath>
+                <OriginalPackagePath>%(_PublishProjectReferenceItems.PackagePath)</OriginalPackagePath>
                 <TargetPath Condition=" '%(_PublishProjectReferenceItems.PublishTargetPath)' == '' "></TargetPath>
                 <TargetPath Condition=" '%(_PublishProjectReferenceItems.PublishTargetPath)' != '' ">$([MSBuild]::MakeRelative('.', '%(_PublishProjectReferenceItems.PublishTargetPath)%(_PublishProjectReferenceItems.TargetPath)'))</TargetPath>
                 <PackagePath Condition=" '%(_PublishProjectReferenceItems.PublishPackagePath)' == '' "></PackagePath>
