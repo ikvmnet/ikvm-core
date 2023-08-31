@@ -12,9 +12,9 @@
     -->
 
     <!-- Publish target that returns publish directory. -->
-    <Target Name="GetPublishDir" DependsOnTargets="Publish" Returns="$(_PublishDir)">
+    <Target Name="GetPublishProjectPath" DependsOnTargets="Publish" Returns="$(GetPublishProjectPath)">
         <PropertyGroup>
-            <_PublishDir>$([System.IO.Path]::GetFullPath('$(PublishDir)'))</_PublishDir>
+            <GetPublishProjectPath>$([System.IO.Path]::GetFullPath('$(PublishDir)'))</GetPublishProjectPath>
         </PropertyGroup>
     </Target>
 
@@ -69,14 +69,14 @@
                 <Properties>%(_PublishProjectReference.SetConfiguration);%(_PublishProjectReference.SetPlatform);%(_PublishProjectReference.SetTargetFramework);%(_PublishProjectReference.SetRuntimeIdentifier)</Properties>
             </_PublishProjectReferencesToPublishTarget>
         </ItemGroup>
-        <MSBuild Projects="@(_PublishProjectReferencesToPublishTarget)" Targets="GetPublishDir" BuildInParallel="$(BuildInParallel)" RemoveProperties="$(_GlobalPropertiesToRemoveFromProjectReferences)" RebaseOutputs="true">
+        <MSBuild Projects="@(_PublishProjectReferencesToPublishTarget)" Targets="GetPublishProjectPath" BuildInParallel="$(BuildInParallel)" RemoveProperties="$(_GlobalPropertiesToRemoveFromProjectReferences)" RebaseOutputs="true">
             <Output TaskParameter="TargetOutputs" ItemName="_ResolvedPublishProjectReferencePublishDir" />
         </MSBuild>
         <PropertyGroup>
-            <_ResolvedPublishProjectReferencePublishDir>@(_ResolvedPublishProjectReferencePublishDir)</_ResolvedPublishProjectReferencePublishDir>
+            <_ResolvedPublishProjectReferencePublishProjectPath>@(_ResolvedPublishProjectReferencePublishDir)</_ResolvedPublishProjectReferencePublishProjectPath>
         </PropertyGroup>
         <ItemGroup>
-            <_PublishProjectReferenceInputItems Include="$(_ResolvedPublishProjectReferencePublishDir)**\*" />
+            <_PublishProjectReferenceInputItems Include="$(_ResolvedPublishProjectReferencePublishProjectPath)**\*" />
         </ItemGroup>
         <_ApplyPublishProjectReferenceMetadata Project="@(_PublishProjectReference)" Items="@(_PublishProjectReferenceInputItems)">
             <Output TaskParameter="Items" ItemName="_PublishProjectReferenceInputItemsWithProjectMetadata" />
