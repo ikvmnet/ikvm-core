@@ -32,12 +32,15 @@
 
     <Target Name="GetPublishProjectReferences" DependsOnTargets="AssignPublishProjectConfiguration" Condition=" '@(_PublishProjectReferenceWithConfiguration)' != '' ">
         <ItemGroup>
-            <_PublishProjectReference Include="@(_PublishProjectReferenceWithConfiguration)">
+            <__PublishProjectReference Include="@(_PublishProjectReferenceWithConfiguration)">
                 <ProjectName>$([System.IO.Path]::GetFileNameWithoutExtension('%(Identity)'))</ProjectName>
                 <PublishTargetPath Condition=" '%(_PublishProjectReferenceWithConfiguration.PublishTargetPath)' != '' ">$([MSBuild]::EnsureTrailingSlash('%(_PublishProjectReferenceWithConfiguration.PublishTargetPath)'))</PublishTargetPath>
                 <PublishPackagePath Condition=" '%(_PublishProjectReferenceWithConfiguration.PublishPackagePath)' != '' ">$([MSBuild]::EnsureTrailingSlash('%(_PublishProjectReferenceWithConfiguration.PublishPackagePath)'))</PublishPackagePath>
-            </_PublishProjectReference>
+            </__PublishProjectReference>
         </ItemGroup>
+        <AddIndexMetadata Items="@(__PublishProjectReference)" MetadataName="_Index">
+            <Output TaskParameter="Items" ItemName="_PublishProjectReference" />
+        </AddIndexMetadata>
     </Target>
 
     <!-- Transforms the contents of a file using a #PARAMETER# replacement strategy. -->
@@ -60,12 +63,7 @@
         </Task>
     </UsingTask>
 
-    <ItemGroup>
-        <_PublishProjectReferenceInputItems Include="nothing" />
-        <_PublishProjectReferenceInputItems Remove="nothing" />
-    </ItemGroup>
-
-    <Target Name="GetPublishProjectReferenceItems" DependsOnTargets="GetPublishProjectReferences" Inputs="@(_PublishProjectReference)" Outputs="%(_PublishProjectReference.Identity)\null" Condition=" '@(_PublishProjectReference)' != '' ">
+    <Target Name="GetPublishProjectReferenceItems" DependsOnTargets="GetPublishProjectReferences" Inputs="@(_PublishProjectReference)" Outputs="%(_PublishProjectReference.Identity)\%(_PublishProjectReference.Index)\null" Condition=" '@(_PublishProjectReference)' != '' ">
         <ItemGroup>
             <_PublishProjectReferencesToPublishTarget Include="@(_PublishProjectReference)">
                 <Properties>%(_PublishProjectReference.SetConfiguration);%(_PublishProjectReference.SetPlatform);%(_PublishProjectReference.SetTargetFramework);%(_PublishProjectReference.SetRuntimeIdentifier)</Properties>
@@ -80,7 +78,6 @@
         <ItemGroup>
             <_PublishProjectReferenceInputItems Include="$(_ResolvedPublishProjectReferencePublishDir)**\*" />
         </ItemGroup>
-        <Message Text="__PublishProjectReferenceInputItems: @(_PublishProjectReferenceInputItems->'%(RecursiveDir)')" Importance="high" />
         <_ApplyPublishProjectReferenceMetadata Project="@(_PublishProjectReference)" Items="@(_PublishProjectReferenceInputItems)">
             <Output TaskParameter="Items" ItemName="_PublishProjectReferenceInputItemsWithProjectMetadata" />
         </_ApplyPublishProjectReferenceMetadata>
