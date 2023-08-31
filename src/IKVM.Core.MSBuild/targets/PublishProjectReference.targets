@@ -32,6 +32,7 @@
 
     <Target Name="GetPublishProjectReferences" DependsOnTargets="AssignPublishProjectConfiguration" Condition=" '$(DesignTimeBuild)' != 'true' And '@(_PublishProjectReferenceWithConfiguration)' != '' ">
         <ItemGroup>
+            <__PublishProjectReference Remove="@(__PublishProjectReference)" />
             <__PublishProjectReference Include="@(_PublishProjectReferenceWithConfiguration)">
                 <ProjectName>$([System.IO.Path]::GetFileNameWithoutExtension('%(Identity)'))</ProjectName>
                 <PublishTargetPath Condition=" '%(_PublishProjectReferenceWithConfiguration.PublishTargetPath)' != '' ">$([MSBuild]::EnsureTrailingSlash('%(_PublishProjectReferenceWithConfiguration.PublishTargetPath)'))</PublishTargetPath>
@@ -65,6 +66,7 @@
 
     <Target Name="GetPublishProjectReferenceItems" DependsOnTargets="GetPublishProjectReferences" Inputs="@(_PublishProjectReference)" Outputs="%(_PublishProjectReference.Identity)\%(_PublishProjectReference._Index)\null" Condition=" '$(DesignTimeBuild)' != 'true' And '@(_PublishProjectReference)' != '' ">
         <ItemGroup>
+            <_PublishProjectReferencesToPublishTarget Remove="@(_PublishProjectReferencesToPublishTarget)" />
             <_PublishProjectReferencesToPublishTarget Include="@(_PublishProjectReference)">
                 <Properties>%(_PublishProjectReference.SetConfiguration);%(_PublishProjectReference.SetPlatform);%(_PublishProjectReference.SetTargetFramework);%(_PublishProjectReference.SetRuntimeIdentifier)</Properties>
             </_PublishProjectReferencesToPublishTarget>
@@ -83,20 +85,24 @@
         </_ApplyPublishProjectReferenceMetadata>
         <ItemGroup>
             <_PublishProjectReferenceItems Include="@(_PublishProjectReferenceInputItemsWithProjectMetadata)">
+                <PublishItemGroup Condition=" '%(_PublishProjectReferenceInputItemsWithProjectMetadata.PublishItemGroup)' == '' ">None</PublishItemGroup>
                 <TargetPath>%(_PublishProjectReferenceInputItemsWithProjectMetadata.RecursiveDir)%(_PublishProjectReferenceInputItemsWithProjectMetadata.Filename)%(_PublishProjectReferenceInputItemsWithProjectMetadata.Extension)</TargetPath>
             </_PublishProjectReferenceItems>
         </ItemGroup>
     </Target>
 
-    <Target Name="GetPublishProjectReferenceOutputItems" DependsOnTargets="GetPublishProjectReferenceItems" BeforeTargets="_GetPackageFiles" Condition=" '$(DesignTimeBuild)' != 'true' And '@(_PublishProjectReferenceItems)' != '' ">
+    <Target Name="GetPublishProjectReferenceOutputItems" DependsOnTargets="GetPublishProjectReferenceItems" BeforeTargets="_GetPackageFiles" Inputs="@(_PublishProjectReferenceItems)" Outputs="%(_PublishProjectReferenceItems.Identity)\%(_PublishProjectReferenceItems._Index)\%(_PublishProjectReferenceItems.PublishItemGroup)\null" Condition=" '$(DesignTimeBuild)' != 'true' And '@(_PublishProjectReferenceItems)' != '' ">
         <ItemGroup>
-            <None Include="@(_PublishProjectReferenceItems)">
+            <_PublishProjectItems Include="@(_PublishProjectReferenceItems)">
                 <TargetPath Condition=" '%(_PublishProjectReferenceItems.PublishTargetPath)' == '' "></TargetPath>
                 <TargetPath Condition=" '%(_PublishProjectReferenceItems.PublishTargetPath)' != '' ">$([MSBuild]::MakeRelative('.', '%(_PublishProjectReferenceItems.PublishTargetPath)%(_PublishProjectReferenceItems.TargetPath)'))</TargetPath>
                 <PackagePath Condition=" '%(_PublishProjectReferenceItems.PublishPackagePath)' == '' "></PackagePath>
                 <PackagePath Condition=" '%(_PublishProjectReferenceItems.PublishPackagePath)' != '' ">$([MSBuild]::MakeRelative('.', '%(_PublishProjectReferenceItems.PublishPackagePath)%(_PublishProjectReferenceItems.TargetPath)'))</PackagePath>
-            </None>
+            </_PublishProjectItems>
         </ItemGroup>
+        <CreateItem Include="@(_PublishProjectItems)">
+            <Output TaskParameter="Include" ItemName="%(_PublishProjectReferenceItems.PublishItemGroup)" />
+        </CreateItem>
     </Target>
 
     <Target Name="GetPublishProjectReferenceItemsForPack" BeforeTargets="_GetPackageFiles" DependsOnTargets="$(GetPublishProjectReferenceItemsForPackDependsOn)" Condition=" '$(DesignTimeBuild)' != 'true' ">
