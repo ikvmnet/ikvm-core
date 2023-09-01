@@ -104,7 +104,7 @@
                 <OriginalTargetPath>%(_PublishProjectReferenceItems.TargetPath)</OriginalTargetPath>
                 <OriginalPackagePath>%(_PublishProjectReferenceItems.PackagePath)</OriginalPackagePath>
                 <TargetPath Condition=" '%(_PublishProjectReferenceItems.PublishTargetPath)' != '' ">$([MSBuild]::MakeRelative('.', '%(_PublishProjectReferenceItems.PublishTargetPath)%(_PublishProjectReferenceItems.TargetPath)'))</TargetPath>
-                <PackagePath Condition=" '%(_PublishProjectReferenceItems.PublishPackagePath)' != '' ">$([MSBuild]::MakeRelative('.', '%(_PublishProjectReferenceItems.PublishPackagePath)%(_PublishProjectReferenceItems.TargetPath)'))</PackagePath>
+                <PackagePath Condition=" '%(_PublishProjectReferenceItems.PublishPackagePath)' != '' ">$([MSBuild]::MakeRelative('.', '%(_PublishProjectReferenceItems.PublishPackagePath)%(_PublishProjectReferenceItems.PackagePath)'))</PackagePath>
             </_PublishProjectItems>
         </ItemGroup>
         <CreateItem Include="@(_PublishProjectItems)" AdditionalMetadata="%(_PublishProjectReferenceItems.PublishItemMetadata)">
