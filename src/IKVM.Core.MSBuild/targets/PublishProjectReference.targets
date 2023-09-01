@@ -71,10 +71,10 @@
             </_PublishProjectReferencesToPublishTarget>
         </ItemGroup>
         <MSBuild Projects="@(_PublishProjectReferencesToPublishTarget)" Targets="Publish;GetPublishProjectPath" BuildInParallel="$(BuildInParallel)" RemoveProperties="$(_GlobalPropertiesToRemoveFromProjectReferences)" RebaseOutputs="true">
-            <Output TaskParameter="TargetOutputs" ItemName="_ResolvedPublishProjectReferencePublishDir" />
+            <Output TaskParameter="TargetOutputs" ItemName="__ResolvedPublishProjectReferencePublishProjectPath" />
         </MSBuild>
         <PropertyGroup>
-            <_ResolvedPublishProjectReferencePublishProjectPath>@(_ResolvedPublishProjectReferencePublishDir)</_ResolvedPublishProjectReferencePublishProjectPath>
+            <_ResolvedPublishProjectReferencePublishProjectPath>@(__ResolvedPublishProjectReferencePublishProjectPath)</_ResolvedPublishProjectReferencePublishProjectPath>
         </PropertyGroup>
         <ItemGroup>
             <_PublishProjectReferenceInputItems Include="$(_ResolvedPublishProjectReferencePublishProjectPath)**\*" />
