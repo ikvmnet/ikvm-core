@@ -25,8 +25,10 @@
 
     <Target Name="GetIncludeProjectReferences" DependsOnTargets="AssignIncludeProjectConfiguration" Condition=" '$(DesignTimeBuild)' != 'true' And '@(_IncludeProjectReferenceWithConfiguration)' != '' ">
         <ItemGroup>
+            <__IncludeProjectReference Remove="@(__IncludeProjectReference)" />
             <__IncludeProjectReference Include="@(_IncludeProjectReferenceWithConfiguration)">
-                <ProjectName>$([System.IO.Path]::GetFileNameWithoutExtension('%(Identity)'))</ProjectName>
+                <IncludeProjectIdentity>%(Identity)</IncludeProjectIdentity>
+                <IncludeProjectName>$([System.IO.Path]::GetFileNameWithoutExtension('%(Identity)'))</IncludeProjectName>
                 <IncludeTargetPath Condition=" '%(_IncludeProjectReferenceWithConfiguration.IncludeTargetPath)' != '' ">$([MSBuild]::EnsureTrailingSlash('%(_IncludeProjectReferenceWithConfiguration.IncludeTargetPath)'))</IncludeTargetPath>
                 <IncludePackagePath Condition=" '%(_IncludeProjectReferenceWithConfiguration.IncludePackagePath)' != '' ">$([MSBuild]::EnsureTrailingSlash('%(_IncludeProjectReferenceWithConfiguration.IncludePackagePath)'))</IncludePackagePath>
             </__IncludeProjectReference>
@@ -36,8 +38,9 @@
         </AddIndexMetadata>
     </Target>
 
-    <Target Name="GetIncludeProjectReferenceItems" DependsOnTargets="GetIncludeProjectReferences" Inputs="@(_IncludeProjectReference)" Outputs="@(_IncludeProjectReference->'%(Identity)\%(_Index)\null')" Condition=" '$(DesignTimeBuild)' != 'true' And '@(_IncludeProjectReference)' != '' ">
+    <Target Name="GetIncludeProjectReferenceItems" DependsOnTargets="$(GetIncludeProjectReferenceItemsDependsOn)" Inputs="@(_IncludeProjectReference)" Outputs="@(_IncludeProjectReference->'%(Identity)\%(_Index)\null')" Condition=" '$(DesignTimeBuild)' != 'true' And '@(_IncludeProjectReference)' != '' ">
         <ItemGroup>
+            <_IncludeProjectReferencesToTarget Remove="@(_IncludeProjectReferencesToTarget)" />
             <_IncludeProjectReferencesToTarget Include="@(_IncludeProjectReference)">
                 <Properties>%(_IncludeProjectReference.SetConfiguration);%(_IncludeProjectReference.SetPlatform);%(_IncludeProjectReference.SetTargetFramework)</Properties>
             </_IncludeProjectReferencesToTarget>
@@ -47,71 +50,58 @@
             <Output TaskParameter="TargetOutputs" ItemName="_ResolvedIncludeProjectReferenceItems" />
         </MSBuild>
         <ItemGroup>
-            <_IncludeProjectReferenceItemsInput Include="@(_ResolvedIncludeProjectReferenceItems)">
-                <ProjectName>%(_ResolvedIncludeProjectReferenceItems.ProjectName)</ProjectName>
-                <IncludeTargetPath>%(_ResolvedIncludeProjectReferenceItems.IncludeTargetPath)</IncludeTargetPath>
-                <IncludePackagePath>%(_ResolvedIncludeProjectReferenceItems.IncludePackagePath)</IncludePackagePath>
-                <Pack>%(_ResolvedIncludeProjectReferenceItems.Pack)</Pack>
-            </_IncludeProjectReferenceItemsInput>
-            <_IncludeProjectReferenceItems Include="@(_IncludeProjectReferenceItemsInput)">
-                <TargetPath>%(RecursiveDir)%(Filename)%(Extension)</TargetPath>
+            <_IncludeProjectReferenceItems Include="@(_ResolvedIncludeProjectReferenceItems)">
+                <IncludeItemGroup Condition=" '%(_ResolvedIncludeProjectReferenceItems.IncludeItemGroup)' == '' ">None</IncludeItemGroup>
+                <IncludeItemPath>%(RecursiveDir)%(Filename)%(Extension)</IncludeItemPath>
             </_IncludeProjectReferenceItems>
         </ItemGroup>
     </Target>
 
-    <Target Name="GetIncludeProjectReferenceCopyToOutputDirectoryItems" DependsOnTargets="GetIncludeProjectReferenceItems" Condition=" '$(DesignTimeBuild)' != 'true' ">
+    <PropertyGroup>
+        <GetIncludeProjectReferenceItemsDependsOn>
+            $(GetIncludeProjectReferenceItemsDependsOn);
+            GetIncludeProjectReferences;
+        </GetIncludeProjectReferenceItemsDependsOn>
+    </PropertyGroup>
+
+    <Target Name="GetIncludeProjectReferenceOutputItems" DependsOnTargets="$(GetIncludeProjectReferenceOutputItemsDependsOn)" BeforeTargets="_GetPackageFiles" Inputs="@(_IncludeProjectReferenceItems)" Outputs="%(_IncludeProjectReferenceItems.IncludeIdentity)\%(_IncludeProjectReferenceItems._Index)\%(_IncludeProjectReferenceItems.IncludeItemGroup)\null" Condition=" '$(DesignTimeBuild)' != 'true' And '@(_IncludeProjectReferenceItems)' != '' ">
         <ItemGroup>
-            <ContentWithTargetPath Include="@(_IncludeProjectReferenceItems)" Condition=" '%(_IncludeProjectReferenceItems.IncludeTargetPath)' != '' And '%(_IncludeProjectReferenceItems.TargetPath)' != '' ">
-                <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-                <TargetPath>$([MSBuild]::MakeRelative('.', '%(_IncludeProjectReferenceItems.IncludeTargetPath)%(_IncludeProjectReferenceItems.TargetPath)'))</TargetPath>
-                <Pack>false</Pack>
-            </ContentWithTargetPath>
+            <_IncludeProjectItems Include="@(_IncludeProjectReferenceItems)">
+                <TargetPath Condition=" '%(_IncludeProjectReferenceItems.IncludeTargetPath)' != '' ">$([MSBuild]::MakeRelative('.', '%(_IncludeProjectReferenceItems.IncludeTargetPath)%(_IncludeProjectReferenceItems.IncludeItemPath)'))</TargetPath>
+                <PackagePath Condition=" '%(_IncludeProjectReferenceItems.IncludeTargetPath)' != '' ">$([MSBuild]::MakeRelative('.', '%(_IncludeProjectReferenceItems.IncludeTargetPath)%(_IncludeProjectReferenceItems.IncludeItemPath)'))</PackagePath>
+            </_IncludeProjectItems>
         </ItemGroup>
+        <CreateItem Include="@(_IncludeProjectItems)" AdditionalMetadata="%(_IncludeProjectReferenceItems.IncludeItemMetadata)">
+            <Output TaskParameter="Include" ItemName="%(_IncludeProjectReferenceItems.IncludeItemGroup)" />
+        </CreateItem>
     </Target>
 
     <PropertyGroup>
-        <GetCopyToOutputDirectoryItemsDependsOn>
+        <GetIncludeProjectReferenceOutputItemsDependsOn>
+            $(GetIncludeProjectReferenceOutputItemsDependsOn);
+            GetIncludeProjectReferenceItems;
+        </GetIncludeProjectReferenceOutputItemsDependsOn>
+    </PropertyGroup>
+
+    <Target Name="CollectIncludeProjectReferenceItems" BeforeTargets="_GetPackageFiles" DependsOnTargets="$(CollectIncludeProjectReferenceItemsDependsOn)" Condition=" '$(DesignTimeBuild)' != 'true' ">
+
+    </Target>
+
+    <PropertyGroup>
+        <CollectIncludeProjectReferenceItemsDependsOn>
+            $(CollectIncludeProjectReferenceItemsDependsOn);
             AssignIncludeProjectConfiguration;
             GetIncludeProjectReferences;
             GetIncludeProjectReferenceItems;
-            GetIncludeProjectReferenceCopyToOutputDirectoryItems;
-            $(GetCopyToOutputDirectoryItemsDependsOn);
-        </GetCopyToOutputDirectoryItemsDependsOn>
+            GetIncludeProjectReferenceOutputItems;
+        </CollectIncludeProjectReferenceItemsDependsOn>
     </PropertyGroup>
 
     <PropertyGroup>
-        <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);GetIncludeProjectReferenceTfmSpecificContent</TargetsForTfmSpecificContentInPackage>
+        <AssignTargetPathsDependsOn>
+            $(AssignTargetPathsDependsOn);
+            CollectIncludeProjectReferenceItems;
+        </AssignTargetPathsDependsOn>
     </PropertyGroup>
-
-    <Target Name="GetIncludeProjectReferenceTfmSpecificContent" DependsOnTargets="GetIncludeProjectReferenceItems" Condition=" '$(DesignTimeBuild)' != 'true' And '@(_IncludeProjectReferenceItems)' != '' ">
-        <ItemGroup>
-            <TfmSpecificPackageFile Include="@(_IncludeProjectReferenceItems)" Condition=" '%(_IncludeProjectReferenceItems.IncludeTargetPath)' != '' And '%(_IncludeProjectReferenceItems.Pack)' != 'false' ">
-                <PackagePath>contentFiles\any\$(TargetFramework)\%(_IncludeProjectReferenceItems.IncludeTargetPath)</PackagePath>
-                <PackagePath Condition=" '%(_IncludeProjectReferenceItems.IncludePackagePath)' != '' ">contentFiles\any\$(TargetFramework)\%(_IncludeProjectReferenceItems.IncludePackagePath)</PackagePath>
-            </TfmSpecificPackageFile>
-        </ItemGroup>
-    </Target>
-
-    <Target Name="GetIncludeProjectReferencePackageItems" DependsOnTargets="GetIncludeProjectReferenceItems" Condition=" '$(DesignTimeBuild)' != 'true' And '@(_IncludeProjectReferenceItems)' != '' ">
-        <ItemGroup>
-            <_PackageFiles Include="@(_IncludeProjectReferenceItems)" Condition=" '%(_IncludeProjectReferenceItems.IncludePackagePath)' != '' And '%(_IncludeProjectReferenceItems.Pack)' != 'false' ">
-                <PackagePath>%(_IncludeProjectReferenceItems.IncludePackagePath)</PackagePath>
-            </_PackageFiles>
-        </ItemGroup>
-    </Target>
-
-    <PropertyGroup>
-        <GetIncludeProjectReferenceItemsBeforePackageFilesDependsOn>
-            AssignIncludeProjectConfiguration;
-            GetIncludeProjectReferences;
-            GetIncludeProjectReferenceItems;
-            GetIncludeProjectReferencePackageItems;
-            $(GetIncludeProjectReferenceItemsBeforePackageFilesDependsOn);
-        </GetIncludeProjectReferenceItemsBeforePackageFilesDependsOn>
-    </PropertyGroup>
-
-    <Target Name="GetIncludeProjectReferencePackageItemsBeforeGetPackageFiles" DependsOnTargets="$(GetIncludeProjectReferenceItemsBeforePackageFilesDependsOn)" BeforeTargets="_GetPackageFiles" Condition=" '$(DesignTimeBuild)' != 'true' ">
-
-    </Target>
 
 </Project>

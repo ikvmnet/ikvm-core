@@ -14,6 +14,14 @@
             <PublishPackagePath>app\foo\bar</PublishPackagePath>
             <Pack>true</Pack>
         </PublishProjectReference>
+        <IncludeProjectReference Include="..\IKVM.Core.MSBuild.Sample.App\IKVM.Core.MSBuild.Sample.App.csproj">
+            <SetTargetFramework>TargetFramework=net6.0</SetTargetFramework>
+            <IncludeTargetPath>inc</IncludeTargetPath>
+            <IncludeItemMetadata>Foo=Bar</IncludeItemMetadata>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <IncludePackagePath>inc</IncludePackagePath>
+            <Pack>true</Pack>
+        </IncludeProjectReference>
     </ItemGroup>
 
     <ItemGroup>

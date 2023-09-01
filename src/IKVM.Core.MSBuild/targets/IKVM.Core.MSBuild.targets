@@ -47,7 +47,6 @@
     <Import Project="$(MSBuildThisFileDirectory)GenerateBuildDependencyFileExtensions.targets" />
     <Import Project="$(MSBuildThisFileDirectory)Transform.targets" />
     <Import Project="$(MSBuildThisFileDirectory)IncludeProjectReference.targets" />
-    <Import Project="$(MSBuildThisFileDirectory)LibProjectReference.targets" />
     <Import Project="$(MSBuildThisFileDirectory)PackageProjectReference.targets" />
     <Import Project="$(MSBuildThisFileDirectory)PublishProjectReference.targets" />
 
