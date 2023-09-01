@@ -86,6 +86,7 @@
             <_PublishProjectReferenceItems Include="@(_PublishProjectReferenceInputItemsWithProjectMetadata)">
                 <PublishItemGroup Condition=" '%(_PublishProjectReferenceInputItemsWithProjectMetadata.PublishItemGroup)' == '' ">None</PublishItemGroup>
                 <TargetPath>%(_PublishProjectReferenceInputItemsWithProjectMetadata.RecursiveDir)%(_PublishProjectReferenceInputItemsWithProjectMetadata.Filename)%(_PublishProjectReferenceInputItemsWithProjectMetadata.Extension)</TargetPath>
+                <PackagePath>%(_PublishProjectReferenceInputItemsWithProjectMetadata.RecursiveDir)%(_PublishProjectReferenceInputItemsWithProjectMetadata.Filename)%(_PublishProjectReferenceInputItemsWithProjectMetadata.Extension)</PackagePath>
             </_PublishProjectReferenceItems>
         </ItemGroup>
     </Target>
@@ -102,9 +103,7 @@
             <_PublishProjectItems Include="@(_PublishProjectReferenceItems)">
                 <OriginalTargetPath>%(_PublishProjectReferenceItems.TargetPath)</OriginalTargetPath>
                 <OriginalPackagePath>%(_PublishProjectReferenceItems.PackagePath)</OriginalPackagePath>
-                <TargetPath Condition=" '%(_PublishProjectReferenceItems.PublishTargetPath)' == '' "></TargetPath>
                 <TargetPath Condition=" '%(_PublishProjectReferenceItems.PublishTargetPath)' != '' ">$([MSBuild]::MakeRelative('.', '%(_PublishProjectReferenceItems.PublishTargetPath)%(_PublishProjectReferenceItems.TargetPath)'))</TargetPath>
-                <PackagePath Condition=" '%(_PublishProjectReferenceItems.PublishPackagePath)' == '' "></PackagePath>
                 <PackagePath Condition=" '%(_PublishProjectReferenceItems.PublishPackagePath)' != '' ">$([MSBuild]::MakeRelative('.', '%(_PublishProjectReferenceItems.PublishPackagePath)%(_PublishProjectReferenceItems.TargetPath)'))</PackagePath>
             </_PublishProjectItems>
         </ItemGroup>
