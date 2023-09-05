@@ -77,7 +77,10 @@
             <_ResolvedPublishProjectReferencePublishProjectPath>@(__ResolvedPublishProjectReferencePublishProjectPath)</_ResolvedPublishProjectReferencePublishProjectPath>
         </PropertyGroup>
         <ItemGroup>
-            <_PublishProjectReferenceInputItems Include="$(_ResolvedPublishProjectReferencePublishProjectPath)**\*" />
+            <__PublishProjectReferenceInputItems Include="$(_ResolvedPublishProjectReferencePublishProjectPath)**\*" />
+            <_PublishProjectReferenceInputItems Include="@(__PublishProjectReferenceInputItems)">
+                <PublishItemPath>%(RecursiveDir)%(Filename)%(Extension)</PublishItemPath>
+            </_PublishProjectReferenceInputItems>
         </ItemGroup>
         <_ApplyPublishProjectReferenceMetadata Project="@(_PublishProjectReference)" Items="@(_PublishProjectReferenceInputItems)">
             <Output TaskParameter="Items" ItemName="_PublishProjectReferenceInputItemsWithProjectMetadata" />
@@ -85,11 +88,10 @@
         <ItemGroup>
             <_PublishProjectReferenceItems Include="@(_PublishProjectReferenceInputItemsWithProjectMetadata)">
                 <PublishItemGroup Condition=" '%(_PublishProjectReferenceInputItemsWithProjectMetadata.PublishItemGroup)' == '' ">None</PublishItemGroup>
-                <PublishItemPath>%(_PublishProjectReferenceInputItemsWithProjectMetadata.RecursiveDir)%(_PublishProjectReferenceInputItemsWithProjectMetadata.Filename)%(_PublishProjectReferenceInputItemsWithProjectMetadata.Extension)</PublishItemPath>
             </_PublishProjectReferenceItems>
         </ItemGroup>
     </Target>
-    
+
     <PropertyGroup>
         <GetPublishProjectReferenceItemsDependsOn>
             $(GetPublishProjectReferenceItemsDependsOn);
@@ -100,8 +102,8 @@
     <Target Name="GetPublishProjectReferenceOutputItems" DependsOnTargets="$(GetPublishProjectReferenceOutputItemsDependsOn)" BeforeTargets="_GetPackageFiles" Inputs="@(_PublishProjectReferenceItems)" Outputs="%(_PublishProjectReferenceItems.PublishIdentity)\%(_PublishProjectReferenceItems._Index)\%(_PublishProjectReferenceItems.PublishItemGroup)\null" Condition=" '$(DesignTimeBuild)' != 'true' And '@(_PublishProjectReferenceItems)' != '' ">
         <ItemGroup>
             <_PublishProjectItems Include="@(_PublishProjectReferenceItems)">
-                <TargetPath Condition=" '%(_PublishProjectReferenceItems.PublishTargetPath)' != '' ">$([MSBuild]::MakeRelative('.', '%(_PublishProjectReferenceItems.PublishTargetPath)%(_PublishProjectReferenceItems.PublishItemPath)'))</TargetPath>
-                <PackagePath Condition=" '%(_PublishProjectReferenceItems.PublishPackagePath)' != '' ">$([MSBuild]::MakeRelative('.', '%(_PublishProjectReferenceItems.PublishPackagePath)%(_PublishProjectReferenceItems.PublishItemPath)'))</PackagePath>
+                <TargetPath Condition=" '%(_PublishProjectReferenceItems.PublishTargetPath)' != '' ">%(_PublishProjectReferenceItems.PublishTargetPath)%(_PublishProjectReferenceItems.PublishItemPath)</TargetPath>
+                <PackagePath Condition=" '%(_PublishProjectReferenceItems.PublishPackagePath)' != '' ">%(_PublishProjectReferenceItems.PublishPackagePath)%(_PublishProjectReferenceItems.PublishItemPath)</PackagePath>
             </_PublishProjectItems>
         </ItemGroup>
         <CreateItem Include="@(_PublishProjectItems)" AdditionalMetadata="%(_PublishProjectReferenceItems.PublishItemMetadata)">
