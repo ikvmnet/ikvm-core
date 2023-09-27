@@ -11,14 +11,27 @@
         
     -->
 
+    <PropertyGroup>
+        <GetPublishProjectPathDependsOn>
+            $(GetPublishProjectPathDependsOn);
+            Publish;
+        </GetPublishProjectPathDependsOn>
+    </PropertyGroup>
+
     <!-- Publish target that returns publish directory. -->
-    <Target Name="GetPublishProjectPath" DependsOnTargets="Publish" Returns="$(GetPublishProjectPath)">
+    <Target Name="GetPublishProjectPath" DependsOnTargets="$(GetPublishProjectPathDependsOn)" Returns="$(GetPublishProjectPath)">
         <PropertyGroup>
             <GetPublishProjectPath>$([System.IO.Path]::GetFullPath('$(PublishDir)'))</GetPublishProjectPath>
         </PropertyGroup>
     </Target>
 
-    <Target Name="AssignPublishProjectConfiguration" Condition=" '$(DesignTimeBuild)' != 'true' And '@(PublishProjectReference)' != '' ">
+    <PropertyGroup>
+        <AssignPublishProjectConfigurationDependsOn>
+            $(AssignPublishProjectConfigurationDependsOn);
+        </AssignPublishProjectConfigurationDependsOn>
+    </PropertyGroup>
+
+    <Target Name="AssignPublishProjectConfiguration" DependsOnTargets="$(AssignPublishProjectConfigurationDependsOn)" Condition=" '$(DesignTimeBuild)' != 'true' And '@(PublishProjectReference)' != '' ">
         <PropertyGroup>
             <OnlyReferenceAndBuildProjectsEnabledInSolutionConfiguration Condition="'$(OnlyReferenceAndBuildProjectsEnabledInSolutionConfiguration)' == ''">true</OnlyReferenceAndBuildProjectsEnabledInSolutionConfiguration>
             <ShouldUnsetParentConfigurationAndPlatform Condition="'$(ShouldUnsetParentConfigurationAndPlatform)' == '' and ('$(BuildingInsideVisualStudio)' == 'true' or '$(BuildingSolutionFile)' == 'true')">true</ShouldUnsetParentConfigurationAndPlatform>
