@@ -63,6 +63,13 @@
         </Task>
     </UsingTask>
 
+    <PropertyGroup>
+        <GetPublishProjectReferenceItemsDependsOn>
+            $(GetPublishProjectReferenceItemsDependsOn);
+            GetPublishProjectReferences;
+        </GetPublishProjectReferenceItemsDependsOn>
+    </PropertyGroup>
+
     <Target Name="GetPublishProjectReferenceItems" DependsOnTargets="$(GetPublishProjectReferenceItemsDependsOn)" Inputs="@(_PublishProjectReference)" Outputs="%(_PublishProjectReference.Identity)\%(_PublishProjectReference._Index)\null" Condition=" '$(DesignTimeBuild)' != 'true' And '@(_PublishProjectReference)' != '' ">
         <ItemGroup>
             <_PublishProjectReferencesToPublishTarget Remove="@(_PublishProjectReferencesToPublishTarget)" />
@@ -93,10 +100,10 @@
     </Target>
 
     <PropertyGroup>
-        <GetPublishProjectReferenceItemsDependsOn>
-            $(GetPublishProjectReferenceItemsDependsOn);
-            GetPublishProjectReferences;
-        </GetPublishProjectReferenceItemsDependsOn>
+        <GetPublishProjectReferenceOutputItemsDependsOn>
+            $(GetPublishProjectReferenceOutputItems);
+            GetPublishProjectReferenceItems;
+        </GetPublishProjectReferenceOutputItemsDependsOn>
     </PropertyGroup>
 
     <Target Name="GetPublishProjectReferenceOutputItems" DependsOnTargets="$(GetPublishProjectReferenceOutputItemsDependsOn)" BeforeTargets="_GetPackageFiles" Inputs="@(_PublishProjectReferenceItems)" Outputs="%(_PublishProjectReferenceItems.PublishIdentity)\%(_PublishProjectReferenceItems._Index)\%(_PublishProjectReferenceItems.PublishItemGroup)\null" Condition=" '$(DesignTimeBuild)' != 'true' And '@(_PublishProjectReferenceItems)' != '' ">
@@ -112,17 +119,6 @@
     </Target>
 
     <PropertyGroup>
-        <GetPublishProjectReferenceOutputItemsDependsOn>
-            $(GetPublishProjectReferenceOutputItems);
-            GetPublishProjectReferenceItems;
-        </GetPublishProjectReferenceOutputItemsDependsOn>
-    </PropertyGroup>
-
-    <Target Name="CollectPublishProjectReferenceItems" BeforeTargets="_GetPackageFiles" DependsOnTargets="$(CollectPublishProjectReferenceItemsDependsOn)" Condition=" '$(DesignTimeBuild)' != 'true' ">
-
-    </Target>
-
-    <PropertyGroup>
         <CollectPublishProjectReferenceItemsDependsOn>
             $(CollectPublishProjectReferenceItemsDependsOn);
             AssignPublishProjectConfiguration;
@@ -131,6 +127,10 @@
             GetPublishProjectReferenceOutputItems;
         </CollectPublishProjectReferenceItemsDependsOn>
     </PropertyGroup>
+
+    <Target Name="CollectPublishProjectReferenceItems" BeforeTargets="_GetPackageFiles" DependsOnTargets="$(CollectPublishProjectReferenceItemsDependsOn)" Condition=" '$(DesignTimeBuild)' != 'true' ">
+
+    </Target>
 
     <PropertyGroup>
         <AssignTargetPathsDependsOn>
