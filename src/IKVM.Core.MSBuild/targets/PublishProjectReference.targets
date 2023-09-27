@@ -64,13 +64,13 @@
     </UsingTask>
 
     <PropertyGroup>
-        <GetPublishProjectReferenceItemsDependsOn>
-            $(GetPublishProjectReferenceItemsDependsOn);
+        <BuildPublishProjectReferencesDependsOn>
+            $(BuildPublishProjectReferencesDependsOn);
             GetPublishProjectReferences;
-        </GetPublishProjectReferenceItemsDependsOn>
+        </BuildPublishProjectReferencesDependsOn>
     </PropertyGroup>
 
-    <Target Name="GetPublishProjectReferenceItems" DependsOnTargets="$(GetPublishProjectReferenceItemsDependsOn)" Inputs="@(_PublishProjectReference)" Outputs="%(_PublishProjectReference.Identity)\%(_PublishProjectReference._Index)\null" Condition=" '$(DesignTimeBuild)' != 'true' And '@(_PublishProjectReference)' != '' ">
+    <Target Name="BuildPublishProjectReferences"  DependsOnTargets="$(BuildPublishProjectReferencesDependsOn)" Condition=" '$(DesignTimeBuild)' != 'true' And '@(_PublishProjectReference)' != '' ">
         <ItemGroup>
             <_PublishProjectReferencesToPublishTarget Remove="@(_PublishProjectReferencesToPublishTarget)" />
             <_PublishProjectReferencesToPublishTarget Include="@(_PublishProjectReference)">
@@ -80,28 +80,49 @@
         <MSBuild Projects="@(_PublishProjectReferencesToPublishTarget)" Targets="Publish;GetPublishProjectPath" BuildInParallel="$(BuildInParallel)" RemoveProperties="$(_GlobalPropertiesToRemoveFromProjectReferences)" RebaseOutputs="true">
             <Output TaskParameter="TargetOutputs" ItemName="__ResolvedPublishProjectReferencePublishProjectPath" />
         </MSBuild>
+        <ItemGroup>
+            <_PublishProjectReferencesToPublishTarget Remove="@(_PublishProjectReferencesToPublishTarget)" />
+            <_ResolvedPublishProjectReferencePublishProjectPath Include="@(__ResolvedPublishProjectReferencePublishProjectPath->'%(OriginalItemSpec)')">
+                <PublishDir>%(Identity)</PublishDir>
+            </_ResolvedPublishProjectReferencePublishProjectPath>
+        </ItemGroup>
+    </Target>
+
+    <PropertyGroup>
+        <GetPublishProjectReferenceItemsDependsOn>
+            $(GetPublishProjectReferenceItemsDependsOn);
+            BuildPublishProjectReferences;
+        </GetPublishProjectReferenceItemsDependsOn>
+    </PropertyGroup>
+
+    <Target Name="GetPublishProjectReferenceItems" DependsOnTargets="$(GetPublishProjectReferenceItemsDependsOn)" Inputs="@(_ResolvedPublishProjectReferencePublishProjectPath)" Outputs="%(_ResolvedPublishProjectReferencePublishProjectPath.Identity)\%(_ResolvedPublishProjectReferencePublishProjectPath._Index)\null" Condition=" '$(DesignTimeBuild)' != 'true' And '@(_ResolvedPublishProjectReferencePublishProjectPath)' != '' ">
         <PropertyGroup>
-            <_ResolvedPublishProjectReferencePublishProjectPath>@(__ResolvedPublishProjectReferencePublishProjectPath)</_ResolvedPublishProjectReferencePublishProjectPath>
+            <_ResolvedPublishProjectReferencePublishDir>%(_ResolvedPublishProjectReferencePublishProjectPath.PublishDir)</_ResolvedPublishProjectReferencePublishDir>
         </PropertyGroup>
         <ItemGroup>
-            <__PublishProjectReferenceInputItems Include="$(_ResolvedPublishProjectReferencePublishProjectPath)**\*" />
+            <__PublishProjectReferenceInputItems Remove="@(__PublishProjectReferenceInputItems)" />
+            <__PublishProjectReferenceInputItems Include="$(_ResolvedPublishProjectReferencePublishDir)**\*" />
             <_PublishProjectReferenceInputItems Include="@(__PublishProjectReferenceInputItems)">
                 <PublishItemPath>%(RecursiveDir)%(Filename)%(Extension)</PublishItemPath>
             </_PublishProjectReferenceInputItems>
+            <__PublishProjectReferenceInputItems Remove="@(__PublishProjectReferenceInputItems)" />
         </ItemGroup>
-        <_ApplyPublishProjectReferenceMetadata Project="@(_PublishProjectReference)" Items="@(_PublishProjectReferenceInputItems)">
+        <_ApplyPublishProjectReferenceMetadata Project="@(_ResolvedPublishProjectReferencePublishProjectPath)" Items="@(_PublishProjectReferenceInputItems)">
             <Output TaskParameter="Items" ItemName="_PublishProjectReferenceInputItemsWithProjectMetadata" />
         </_ApplyPublishProjectReferenceMetadata>
         <ItemGroup>
+            <_PublishProjectReferenceInputItems Remove="@(_PublishProjectReferenceInputItems)" />
             <_PublishProjectReferenceItems Include="@(_PublishProjectReferenceInputItemsWithProjectMetadata)">
                 <PublishItemGroup Condition=" '%(_PublishProjectReferenceInputItemsWithProjectMetadata.PublishItemGroup)' == '' ">None</PublishItemGroup>
             </_PublishProjectReferenceItems>
+            <_PublishProjectReferenceInputItemsWithProjectMetadata Remove="@(_PublishProjectReferenceInputItemsWithProjectMetadata)" />
         </ItemGroup>
     </Target>
 
     <PropertyGroup>
         <GetPublishProjectReferenceOutputItemsDependsOn>
             $(GetPublishProjectReferenceOutputItems);
+            BuildPublishProjectReferences;
             GetPublishProjectReferenceItems;
         </GetPublishProjectReferenceOutputItemsDependsOn>
     </PropertyGroup>
@@ -123,6 +144,7 @@
             $(CollectPublishProjectReferenceItemsDependsOn);
             AssignPublishProjectConfiguration;
             GetPublishProjectReferences;
+            BuildPublishProjectReferences;
             GetPublishProjectReferenceItems;
             GetPublishProjectReferenceOutputItems;
         </CollectPublishProjectReferenceItemsDependsOn>
