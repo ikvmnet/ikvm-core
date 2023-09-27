@@ -144,7 +144,7 @@
         <ItemGroup>
             <_PublishProjectItems Include="@(_PublishProjectReferenceItems)">
                 <TargetPath Condition=" '%(_PublishProjectReferenceItems.PublishTargetPath)' != '' ">%(_PublishProjectReferenceItems.PublishTargetPath)%(_PublishProjectReferenceItems.PublishItemPath)</TargetPath>
-                <PackagePath Condition=" '%(_PublishProjectReferenceItems.PublishPackagePath)' != '' ">%(_PublishProjectReferenceItems.PublishPackagePath)%(_PublishProjectReferenceItems.PublishItemPath)</PackagePath>
+                <PackagePath Condition=" '%(_PublishProjectReferenceItems.PublishPackagePath)' != '' ">$([System.IO.Path]::GetDirectoryName('%(_PublishProjectReferenceItems.PublishPackagePath)%(_PublishProjectReferenceItems.PublishItemPath)'))</PackagePath>
             </_PublishProjectItems>
         </ItemGroup>
         <CreateItem Include="@(_PublishProjectItems)" AdditionalMetadata="%(_PublishProjectReferenceItems.PublishItemMetadata)">

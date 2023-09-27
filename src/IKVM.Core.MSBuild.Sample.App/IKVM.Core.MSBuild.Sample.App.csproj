@@ -10,9 +10,13 @@
 
     <ItemGroup>
         <None Remove="sub\TextFile1.txt" />
+        <None Remove="sub\TextFile2" />
     </ItemGroup>
 
     <ItemGroup>
+        <Content Include="sub\TextFile2">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
         <Content Include="sub\TextFile1.txt">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
