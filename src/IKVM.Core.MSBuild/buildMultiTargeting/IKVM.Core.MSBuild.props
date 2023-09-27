@@ -1,0 +1,8 @@
+﻿<Project>
+    <PropertyGroup>
+        <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    </PropertyGroup>
+
+    <Import Project="$(MSBuildThisFileDirectory)..\targets\IKVM.Core.MSBuild.props" />
+
+</Project>
