@@ -137,6 +137,9 @@
         <CreateItem Include="@(_PublishProjectItems)" AdditionalMetadata="%(_PublishProjectReferenceItems.PublishItemMetadata)">
             <Output TaskParameter="Include" ItemName="%(_PublishProjectReferenceItems.PublishItemGroup)" />
         </CreateItem>
+        <ItemGroup>
+            <_PublishProjectItems Remove="@(_PublishProjectItems)" />
+        </ItemGroup>
     </Target>
 
     <PropertyGroup>
