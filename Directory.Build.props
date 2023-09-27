@@ -33,4 +33,6 @@
         <PackageVersion Condition=" '$(PackageVersion)' == '' ">$(Version)</PackageVersion>
     </PropertyGroup>
 
+    <Import Project="$(MSBuildThisFileDirectory)src\IKVM.Core.MSBuild\build\IKVM.Core.MSBuild.props" />
+
 </Project>
