@@ -17,7 +17,7 @@ namespace IKVM.Core.MSBuild.Tasks.Test
         {
             var t = new GenerateDepsFileExtensions();
             t.DepsFilePath = Path.Combine(Path.GetDirectoryName(typeof(GenerateDepsFileExtensionsTests).Assembly.Location), "Sample.deps.json");
-            t.AdditionalRuntimeNativeAssets = new[]
+            t.AdditionalRuntimeAssets = new[]
             {
                 new TaskItem("runtimes/magicrid/native/foo.bar", new Dictionary<string,string>()
                 {
