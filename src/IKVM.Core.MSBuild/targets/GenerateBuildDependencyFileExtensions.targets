@@ -8,7 +8,7 @@
     </Target>
 
     <Target Name="GenerateBuildDependencyFileExtensions" AfterTargets="GenerateBuildDependencyFile" DependsOnTargets="ResolveBuildDependencyFileExtensions" Condition=" '$(TargetFramework)' != '' And '$(GenerateDependencyFile)' == 'true' ">
-        <GenerateDepsFileExtensions DepsFilePath="$(ProjectDepsFilePath)" AdditionalRuntimeNativeAssets="@(AdditionalRuntimeNativeAssets)" />
+        <GenerateDepsFileExtensions DepsFilePath="$(ProjectDepsFilePath)" AdditionalRuntimeAssets="@(AdditionalRuntimeAssets)" />
     </Target>
 
 </Project>
