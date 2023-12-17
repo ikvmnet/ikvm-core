@@ -29,15 +29,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IKVM.Core.MSBuild", "src\IK
 		{928B6690-5AF7-4EBD-ADF7-BEAF58826A5E} = {928B6690-5AF7-4EBD-ADF7-BEAF58826A5E}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IKVM.Core.MSBuild.Sample", "src\IKVM.Core.MSBuild.Sample\IKVM.Core.MSBuild.Sample.csproj", "{6D523EFF-8672-4D6B-AE50-95A480C61DCE}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IKVM.Core.MSBuild.Sample.Lib", "src\IKVM.Core.MSBuild.Sample.Lib\IKVM.Core.MSBuild.Sample.Lib.vcxproj", "{C7C31000-CBDC-4899-947F-D528544AB8B6}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IKVM.Core.MSBuild.Tasks", "src\IKVM.Core.MSBuild.Tasks\IKVM.Core.MSBuild.Tasks.csproj", "{928B6690-5AF7-4EBD-ADF7-BEAF58826A5E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IKVM.Core.MSBuild.Tasks.Test", "src\IKVM.Core.MSBuild.Tasks.Test\IKVM.Core.MSBuild.Tasks.Test.csproj", "{4DA00B4C-11E4-4F43-AFF1-90F33B7C74CC}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IKVM.Core.MSBuild.Sample.App", "src\IKVM.Core.MSBuild.Sample.App\IKVM.Core.MSBuild.Sample.App.csproj", "{6A662195-0981-4DA4-98CE-FB086D791E9C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,14 +51,6 @@ Global
 		{E37183B3-E98D-4A30-94C8-FD1CA2A1F828}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E37183B3-E98D-4A30-94C8-FD1CA2A1F828}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E37183B3-E98D-4A30-94C8-FD1CA2A1F828}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6D523EFF-8672-4D6B-AE50-95A480C61DCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6D523EFF-8672-4D6B-AE50-95A480C61DCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6D523EFF-8672-4D6B-AE50-95A480C61DCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6D523EFF-8672-4D6B-AE50-95A480C61DCE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C7C31000-CBDC-4899-947F-D528544AB8B6}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{C7C31000-CBDC-4899-947F-D528544AB8B6}.Debug|Any CPU.Build.0 = Debug|x64
-		{C7C31000-CBDC-4899-947F-D528544AB8B6}.Release|Any CPU.ActiveCfg = Release|x64
-		{C7C31000-CBDC-4899-947F-D528544AB8B6}.Release|Any CPU.Build.0 = Release|x64
 		{928B6690-5AF7-4EBD-ADF7-BEAF58826A5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{928B6690-5AF7-4EBD-ADF7-BEAF58826A5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{928B6690-5AF7-4EBD-ADF7-BEAF58826A5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -73,10 +59,6 @@ Global
 		{4DA00B4C-11E4-4F43-AFF1-90F33B7C74CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4DA00B4C-11E4-4F43-AFF1-90F33B7C74CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4DA00B4C-11E4-4F43-AFF1-90F33B7C74CC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6A662195-0981-4DA4-98CE-FB086D791E9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6A662195-0981-4DA4-98CE-FB086D791E9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6A662195-0981-4DA4-98CE-FB086D791E9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6A662195-0981-4DA4-98CE-FB086D791E9C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
