@@ -3,11 +3,7 @@
         <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
     </PropertyGroup>
 
-    <Target Name="ResolveBuildDependencyFileExtensions">
-        
-    </Target>
-
-    <Target Name="GenerateBuildDependencyFileExtensions" AfterTargets="GenerateBuildDependencyFile" DependsOnTargets="ResolveBuildDependencyFileExtensions" Condition=" '$(TargetFramework)' != '' And '$(GenerateDependencyFile)' == 'true' ">
+    <Target Name="GenerateBuildDependencyFileExtensions" AfterTargets="GenerateBuildDependencyFile" Condition=" '$(TargetFramework)' != '' And '$(GenerateDependencyFile)' == 'true' ">
         <GenerateDepsFileExtensions DepsFilePath="$(ProjectDepsFilePath)" AdditionalRuntimeLibraryAssets="@(AdditionalRuntimeLibraryAssets)" AdditionalRuntimeNativeAssets="@(AdditionalRuntimeNativeAssets)" />
     </Target>
 
