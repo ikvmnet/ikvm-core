@@ -24,7 +24,6 @@ namespace IKVM.Core.MSBuild.Tasks.Test
                     ["LibraryName"] = "TestPackage",
                     ["LibraryVersion"] = "1.2.3",
                     ["LibraryType"] = "project",
-                    ["LibraryPath"] = "testpackage/1.2.3",
                     ["Runtime"] = "magicrid",
                 }),
             };
@@ -35,7 +34,6 @@ namespace IKVM.Core.MSBuild.Tasks.Test
                     ["LibraryName"] = "TestPackage",
                     ["LibraryVersion"] = "1.2.3",
                     ["LibraryType"] = "project",
-                    ["LibraryPath"] = "testpackage/1.2.3",
                     ["Runtime"] = "magicrid",
                 })
             };

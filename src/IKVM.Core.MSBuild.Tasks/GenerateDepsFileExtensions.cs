@@ -99,8 +99,8 @@
 
         RuntimeLibrary BuildRuntimeLibraryWithAdditional(DependencyContext context, string name)
         {
-            var version = "0.0.0";
-            var type = "project";
+            string version = null;
+            string type = null;
             var path = "";
             var hash = "";
             var hashPath = "";
@@ -146,8 +146,6 @@
                 version = "0.0.0";
             if (string.IsNullOrEmpty(type))
                 type = null;
-            if (string.IsNullOrEmpty(path))
-                path = name + "/" + version;
             if (string.IsNullOrEmpty(hash))
                 hash = "";
             if (string.IsNullOrEmpty(hashPath))
