@@ -3,11 +3,17 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.IO.MemoryMappedFiles;
+    using System.IO.Pipes;
     using System.Linq;
+    using System.Reflection;
+    using System.Reflection.Metadata;
+    using System.Reflection.PortableExecutable;
 
     using Microsoft.Build.Framework;
     using Microsoft.Build.Utilities;
     using Microsoft.Extensions.DependencyModel;
+    using Microsoft.Win32.SafeHandles;
 
     public class GenerateDepsFileExtensions : Task
     {
@@ -190,12 +196,14 @@
                     runtimeFiles.Remove(file);
 
                 var assemblyVersion = addl.GetMetadata(METADATA_LIBRARY_ASSET_ASSEMBLYVERSION) ?? file?.AssemblyVersion;
-                if (string.IsNullOrEmpty(assemblyVersion))
-                    assemblyVersion = null;
+                if (string.IsNullOrEmpty(assemblyVersion) && File.Exists(path))
+                    if (TryLoadAssemblyVersion(path, out var v))
+                        assemblyVersion = v;
 
                 var fileVersion = addl.GetMetadata(METADATA_LIBRARY_ASSET_FILEVERSION) ?? file?.FileVersion;
-                if (string.IsNullOrEmpty(fileVersion))
-                    fileVersion = null;
+                if (string.IsNullOrEmpty(fileVersion) && File.Exists(path))
+                    if (TryLoadFileVersion(path, out var v))
+                        fileVersion = v;
 
                 runtimeFiles.Add(new RuntimeFile(path, assemblyVersion, fileVersion));
             }
@@ -239,17 +247,51 @@
                     runtimeFiles.Remove(file);
 
                 var assemblyVersion = addl.GetMetadata(METADATA_LIBRARY_ASSET_ASSEMBLYVERSION) ?? file?.AssemblyVersion;
-                if (string.IsNullOrEmpty(assemblyVersion))
-                    assemblyVersion = null;
+                if (string.IsNullOrEmpty(assemblyVersion) && File.Exists(path))
+                    if (TryLoadAssemblyVersion(path, out var v))
+                        assemblyVersion = v;
 
                 var fileVersion = addl.GetMetadata(METADATA_LIBRARY_ASSET_FILEVERSION) ?? file?.FileVersion;
-                if (string.IsNullOrEmpty(fileVersion))
-                    fileVersion = null;
+                if (string.IsNullOrEmpty(fileVersion) && File.Exists(path))
+                    if (TryLoadFileVersion(path, out var v))
+                        fileVersion = v;
 
                 runtimeFiles.Add(new RuntimeFile(path, assemblyVersion, fileVersion));
             }
 
             return new RuntimeAssetGroup(runtime, runtimeFiles);
+        }
+
+        /// <summary>
+        /// Attempts to get the assembly version of a file.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="assemblyVersion"></param>
+        /// <returns></returns>
+        bool TryLoadAssemblyVersion(string path, out string assemblyVersion)
+        {
+            try
+            {
+                assemblyVersion = MetadataReader.GetAssemblyName(path)?.Version?.ToString();
+                return true;
+            }
+            catch
+            {
+                assemblyVersion = null;
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Tries to load the file version of a file.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="fileVersion"></param>
+        /// <returns></returns>
+        bool TryLoadFileVersion(string path, out string fileVersion)
+        {
+            fileVersion = null;
+            return false;
         }
 
         IEnumerable<RuntimeFallbacks> BuildRuntimeGraph(DependencyContext context)
