@@ -1,4 +1,6 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project>
+    <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.props" />
+    <Import Project="..\IKVM.Core.MSBuild\build\IKVM.Core.MSBuild.props" />
 
     <PropertyGroup>
         <TargetFrameworks>net472;net6.0</TargetFrameworks>
@@ -27,6 +29,14 @@
     <ItemGroup>
         <PackageReference Include="Mono.Posix" Version="7.1.0-final.1.21458.1" />
         <PackageReference Include="Mono.Unix" Version="7.1.0-final.1.21458.1" />
+        <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="8.0.0" GeneratePathProperty="true" />
+        <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="8.0.0" GeneratePathProperty="true" />
+        <PackageReference Include="System.Collections.Immutable" Version="8.0.0" GeneratePathProperty="true" />
+        <PackageReference Include="System.Reflection.Metadata" Version="8.0.0" GeneratePathProperty="true" />
+        <PackageReference Include="System.Text.Encodings.Web" Version="8.0.0" GeneratePathProperty="true" />
+        <PackageReference Include="System.Text.Json" Version="8.0.0" GeneratePathProperty="true" />
     </ItemGroup>
 
+    <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.targets" />
+    <Import Project="..\IKVM.Core.MSBuild\build\IKVM.Core.MSBuild.targets" />
 </Project>

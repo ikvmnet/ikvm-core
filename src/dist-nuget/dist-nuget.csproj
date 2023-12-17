@@ -1,4 +1,7 @@
-﻿<Project Sdk="Microsoft.Build.NoTargets/3.5.6">
+﻿<Project>
+    <Import Sdk="Microsoft.Build.NoTargets" Project="Sdk.props" />
+    <Import Project="..\IKVM.Core.MSBuild\build\IKVM.Core.MSBuild.props" />
+    
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
@@ -6,9 +9,20 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="8.0.0" PrivateAssets="All" GeneratePathProperty="true" />
+        <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="8.0.0" PrivateAssets="All" GeneratePathProperty="true" />
+        <PackageReference Include="System.Collections.Immutable" Version="8.0.0" PrivateAssets="All" GeneratePathProperty="true" />
+        <PackageReference Include="System.Reflection.Metadata" Version="8.0.0" PrivateAssets="All" GeneratePathProperty="true" />
+        <PackageReference Include="System.Text.Encodings.Web" Version="8.0.0" PrivateAssets="All" GeneratePathProperty="true" />
+        <PackageReference Include="System.Text.Json" Version="8.0.0" PrivateAssets="All" GeneratePathProperty="true" />
+    </ItemGroup>
+
+    <ItemGroup>
         <PackageProjectReference Include="..\IKVM.Core.MSBuild\IKVM.Core.MSBuild.csproj">
             <PackageTargetPath>.</PackageTargetPath>
         </PackageProjectReference>
     </ItemGroup>
 
+    <Import Sdk="Microsoft.Build.NoTargets" Project="Sdk.targets" />
+    <Import Project="..\IKVM.Core.MSBuild\build\IKVM.Core.MSBuild.targets" />
 </Project>

@@ -1,5 +1,4 @@
 <Project>
 
-    <Import Project="$(MSBuildThisFileDirectory)src\IKVM.Core.MSBuild\build\IKVM.Core.MSBuild.targets" />
 
 </Project>

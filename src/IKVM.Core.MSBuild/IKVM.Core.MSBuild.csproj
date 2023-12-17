@@ -1,4 +1,6 @@
-﻿<Project Sdk="Microsoft.Build.NoTargets/3.5.6">
+﻿<Project>
+    <Import Sdk="Microsoft.Build.NoTargets" Project="Sdk.props" />
+    <Import Project="build\IKVM.Core.MSBuild.props" />
 
     <PropertyGroup>
         <TargetFrameworks>netstandard2.0</TargetFrameworks>
@@ -18,7 +20,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="all" />
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+        <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="8.0.0" PrivateAssets="All" GeneratePathProperty="true" />
+        <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="8.0.0" PrivateAssets="All" GeneratePathProperty="true" />
+        <PackageReference Include="System.Collections.Immutable" Version="8.0.0" PrivateAssets="All" GeneratePathProperty="true" />
+        <PackageReference Include="System.Reflection.Metadata" Version="8.0.0" PrivateAssets="All" GeneratePathProperty="true" />
+        <PackageReference Include="System.Text.Encodings.Web" Version="8.0.0" PrivateAssets="All" GeneratePathProperty="true" />
+        <PackageReference Include="System.Text.Json" Version="8.0.0" PrivateAssets="All" GeneratePathProperty="true" />
     </ItemGroup>
 
     <ItemGroup>
@@ -34,13 +42,19 @@
         <PublishProjectReference Include="..\IKVM.Core.MSBuild.Tasks\IKVM.Core.MSBuild.Tasks.csproj">
             <SetTargetFramework>TargetFramework=net472</SetTargetFramework>
             <PublishPackagePath>tasks\net472</PublishPackagePath>
+            <PublishTargetPath>tasks\net472</PublishTargetPath>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <Pack>true</Pack>
         </PublishProjectReference>
         <PublishProjectReference Include="..\IKVM.Core.MSBuild.Tasks\IKVM.Core.MSBuild.Tasks.csproj">
             <SetTargetFramework>TargetFramework=net6.0</SetTargetFramework>
             <PublishPackagePath>tasks\net6.0</PublishPackagePath>
+            <PublishTargetPath>tasks\net6.0</PublishTargetPath>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <Pack>true</Pack>
         </PublishProjectReference>
     </ItemGroup>
 
+    <Import Sdk="Microsoft.Build.NoTargets" Project="Sdk.targets" />
+    <Import Project="..\IKVM.Core.MSBuild\build\IKVM.Core.MSBuild.targets" />
 </Project>

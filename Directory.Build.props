@@ -33,10 +33,4 @@
         <PackageVersion Condition=" '$(PackageVersion)' == '' ">$(Version)</PackageVersion>
     </PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Include="System.Reflection.Metadata" Version="7.0.2" PrivateAssets="all" GeneratePathProperty="true" />
-    </ItemGroup>
-
-    <Import Project="$(MSBuildThisFileDirectory)src\IKVM.Core.MSBuild\build\IKVM.Core.MSBuild.props" />
-
 </Project>

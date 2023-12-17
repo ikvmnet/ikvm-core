@@ -3,17 +3,12 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.IO.MemoryMappedFiles;
-    using System.IO.Pipes;
     using System.Linq;
-    using System.Reflection;
     using System.Reflection.Metadata;
-    using System.Reflection.PortableExecutable;
 
     using Microsoft.Build.Framework;
     using Microsoft.Build.Utilities;
     using Microsoft.Extensions.DependencyModel;
-    using Microsoft.Win32.SafeHandles;
 
     public class GenerateDepsFileExtensions : Task
     {
