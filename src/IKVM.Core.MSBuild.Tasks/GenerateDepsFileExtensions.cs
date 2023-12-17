@@ -14,7 +14,6 @@
         const string METADATA_LIBRARY_NAME = "LibraryName";
         const string METADATA_LIBRARY_VERSION = "LibraryVersion";
         const string METADATA_LIBRARY_TYPE = "LibraryType";
-        const string METADATA_LIBRARY_PATH = "LibraryPath";
         const string METADATA_LIBRARY_ASSET_RUNTIME = "Runtime";
         const string METADATA_LIBRARY_ASSET_PATH = "AssetPath";
         const string METADATA_LIBRARY_ASSET_ASSEMBLYVERSION = "AssemblyVersion";
@@ -131,8 +130,6 @@
                     version ??= _version;
                 if (addl.GetMetadata(METADATA_LIBRARY_TYPE) is string _type and not null)
                     type ??= _type;
-                if (addl.GetMetadata(METADATA_LIBRARY_PATH) is string _path and not null)
-                    path ??= _path;
             }
 
             // merge in new items
@@ -142,8 +139,6 @@
                     version ??= _version;
                 if (addl.GetMetadata(METADATA_LIBRARY_TYPE) is string _type and not null)
                     type ??= _type;
-                if (addl.GetMetadata(METADATA_LIBRARY_PATH) is string _path and not null)
-                    path ??= _path;
             }
 
             if (string.IsNullOrEmpty(version))
@@ -151,7 +146,7 @@
             if (string.IsNullOrEmpty(type))
                 type = null;
             if (string.IsNullOrEmpty(path))
-                path = null;
+                path = name + "/" + version;
             if (string.IsNullOrEmpty(hash))
                 hash = "";
             if (string.IsNullOrEmpty(hashPath))
