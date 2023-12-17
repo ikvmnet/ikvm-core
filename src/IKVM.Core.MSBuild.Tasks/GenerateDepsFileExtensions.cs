@@ -90,8 +90,8 @@
         {
             var keys = context.RuntimeLibraries
                 .Select(i => i.Name)
-                .Concat(AdditionalRuntimeLibraryAssets.Select(i => i.GetMetadata(METADATA_LIBRARY_NAME)))
-                .Concat(AdditionalRuntimeNativeAssets.Select(i => i.GetMetadata(METADATA_LIBRARY_NAME)))
+                .Concat(AdditionalRuntimeLibraryAssets.Select(i => i.GetMetadata(METADATA_LIBRARY_NAME)).Where(i => i != null))
+                .Concat(AdditionalRuntimeNativeAssets.Select(i => i.GetMetadata(METADATA_LIBRARY_NAME)).Where(i => i != null))
                 .Distinct();
             foreach (var key in keys)
                 yield return BuildRuntimeLibraryWithAdditional(context, key);
@@ -164,7 +164,7 @@
         {
             var keys = context.RuntimeLibraries
                 .SelectMany(i => i.RuntimeAssemblyGroups.Select(j => new { i.Name, j.Runtime }))
-                .Concat(AdditionalRuntimeLibraryAssets.Select(i => new { Name = i.GetMetadata(METADATA_LIBRARY_NAME), Runtime = i.GetMetadata(METADATA_LIBRARY_ASSET_RUNTIME) }))
+                .Concat(AdditionalRuntimeLibraryAssets.Select(i => new { Name = i.GetMetadata(METADATA_LIBRARY_NAME), Runtime = i.GetMetadata(METADATA_LIBRARY_ASSET_RUNTIME) }).Where(i => i.Name != null))
                 .Where(i => i.Name == name)
                 .Distinct();
             foreach (var key in keys)
@@ -213,7 +213,7 @@
         {
             var keys = context.RuntimeLibraries
                 .SelectMany(i => i.NativeLibraryGroups.Select(j => new { i.Name, j.Runtime }))
-                .Concat(AdditionalRuntimeNativeAssets.Select(i => new { Name = i.GetMetadata(METADATA_LIBRARY_NAME), Runtime = i.GetMetadata(METADATA_LIBRARY_ASSET_RUNTIME) }))
+                .Concat(AdditionalRuntimeNativeAssets.Select(i => new { Name = i.GetMetadata(METADATA_LIBRARY_NAME), Runtime = i.GetMetadata(METADATA_LIBRARY_ASSET_RUNTIME) }).Where(i => i.Name != null))
                 .Where(i => i.Name == name)
                 .Distinct();
             foreach (var key in keys)
