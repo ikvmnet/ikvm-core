@@ -1,5 +1,6 @@
 ﻿namespace IKVM.Core.MSBuild.Tasks
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -22,9 +23,9 @@
         [Required]
         public string DepsFilePath { get; set; }
 
-        public ITaskItem[] AdditionalRuntimeLibraryAssets { get; set; }
+        public ITaskItem[] AdditionalRuntimeLibraryAssets { get; set; } = Array.Empty<ITaskItem>();
 
-        public ITaskItem[] AdditionalRuntimeNativeAssets { get; set; }
+        public ITaskItem[] AdditionalRuntimeNativeAssets { get; set; } = Array.Empty<ITaskItem>();
 
         /// <summary>
         /// Reads in the .deps.json file.
@@ -32,8 +33,8 @@
         /// <returns></returns>
         DependencyContext ReadDepsFile()
         {
-            using (var rdr = File.OpenRead(DepsFilePath))
-                return new DependencyContextJsonReader().Read(rdr);
+            using var rdr = File.OpenRead(DepsFilePath);
+            return new DependencyContextJsonReader().Read(rdr);
         }
 
         /// <summary>
@@ -42,8 +43,8 @@
         /// <param name="context"></param>
         void WriteDepsFile(DependencyContext context)
         {
-            using (var wrt = File.OpenWrite(DepsFilePath))
-                new DependencyContextWriter().Write(context, wrt);
+            using var wrt = File.OpenWrite(DepsFilePath);
+            new DependencyContextWriter().Write(context, wrt);
         }
 
         public override bool Execute()
@@ -87,13 +88,13 @@
 
         IEnumerable<RuntimeLibrary> BuildRuntimeLibrariesWithAdditional(DependencyContext context)
         {
-            var keys = context.RuntimeLibraries
+            var names = context.RuntimeLibraries
                 .Select(i => i.Name)
                 .Concat(AdditionalRuntimeLibraryAssets.Select(i => i.GetMetadata(METADATA_LIBRARY_NAME)).Where(i => i != null))
                 .Concat(AdditionalRuntimeNativeAssets.Select(i => i.GetMetadata(METADATA_LIBRARY_NAME)).Where(i => i != null))
                 .Distinct();
-            foreach (var key in keys)
-                yield return BuildRuntimeLibraryWithAdditional(context, key);
+            foreach (var name in names)
+                yield return BuildRuntimeLibraryWithAdditional(context, name);
         }
 
         RuntimeLibrary BuildRuntimeLibraryWithAdditional(DependencyContext context, string name)
