@@ -10,10 +10,7 @@
     <UsingTask TaskName="GenerateDepsFileExtensions" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
         <Task>
             <Reference Include="$(PkgMicrosoft_Extensions_DependencyModel)\lib\netstandard2.0\Microsoft.Extensions.DependencyModel.dll" />
-            <Reference Include="$(PkgSystem_Collections_Immutable)\lib\netstandard2.0\System.Collections.Immutable.dll" />
             <Reference Include="$(PkgSystem_Reflection_Metadata)\lib\netstandard2.0\System.Reflection.Metadata.dll" />
-            <Reference Include="$(PkgSystem_Text_Encodings_Web)\lib\netstandard2.0\System.Text.Encodings.Web.dll" />
-            <Reference Include="$(PkgSystem_Text_Json)\lib\netstandard2.0\System.Text.Json.dll" />
             <Code Type="Class" Language="CS">
                 <![CDATA[
 $([MSBuild]::Unescape('$(___GenerateDepsFileExtensionsCs)'))
