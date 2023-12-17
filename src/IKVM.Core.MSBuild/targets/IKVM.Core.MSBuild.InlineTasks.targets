@@ -14,6 +14,7 @@
     
     <UsingTask TaskName="GenerateDepsFileExtensions" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
         <Task>
+            <Reference Include="$(PkgSystem_Reflection_Metadata)\lib\netstandard2.0\System.Reflection.Metadata.dll" />
             <Reference Include="$(___MicrosoftExtensionDependencyModelAssemblyPath)" />
             <Code Type="Class" Language="CS">
                 <![CDATA[

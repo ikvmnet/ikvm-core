@@ -37,8 +37,8 @@
             <Pack>true</Pack>
         </PublishProjectReference>
         <PublishProjectReference Include="..\IKVM.Core.MSBuild.Tasks\IKVM.Core.MSBuild.Tasks.csproj">
-            <SetTargetFramework>TargetFramework=netcoreapp3.1</SetTargetFramework>
-            <PublishPackagePath>tasks\netcoreapp3.1</PublishPackagePath>
+            <SetTargetFramework>TargetFramework=net6.0</SetTargetFramework>
+            <PublishPackagePath>tasks\net6.0</PublishPackagePath>
             <Pack>true</Pack>
         </PublishProjectReference>
     </ItemGroup>
