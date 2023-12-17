@@ -196,13 +196,13 @@
                     runtimeFiles.Remove(file);
 
                 var assemblyVersion = addl.GetMetadata(METADATA_LIBRARY_ASSET_ASSEMBLYVERSION) ?? file?.AssemblyVersion;
-                if (string.IsNullOrEmpty(assemblyVersion) && File.Exists(path))
-                    if (TryLoadAssemblyVersion(path, out var v))
+                if (string.IsNullOrEmpty(assemblyVersion) && File.Exists(addl.ItemSpec))
+                    if (TryLoadAssemblyVersion(addl.ItemSpec, out var v))
                         assemblyVersion = v;
 
                 var fileVersion = addl.GetMetadata(METADATA_LIBRARY_ASSET_FILEVERSION) ?? file?.FileVersion;
-                if (string.IsNullOrEmpty(fileVersion) && File.Exists(path))
-                    if (TryLoadFileVersion(path, out var v))
+                if (string.IsNullOrEmpty(fileVersion) && File.Exists(addl.ItemSpec))
+                    if (TryLoadFileVersion(addl.ItemSpec, out var v))
                         fileVersion = v;
 
                 runtimeFiles.Add(new RuntimeFile(path, assemblyVersion, fileVersion));
@@ -247,13 +247,13 @@
                     runtimeFiles.Remove(file);
 
                 var assemblyVersion = addl.GetMetadata(METADATA_LIBRARY_ASSET_ASSEMBLYVERSION) ?? file?.AssemblyVersion;
-                if (string.IsNullOrEmpty(assemblyVersion) && File.Exists(path))
-                    if (TryLoadAssemblyVersion(path, out var v))
+                if (string.IsNullOrEmpty(assemblyVersion) && File.Exists(addl.ItemSpec))
+                    if (TryLoadAssemblyVersion(addl.ItemSpec, out var v))
                         assemblyVersion = v;
 
                 var fileVersion = addl.GetMetadata(METADATA_LIBRARY_ASSET_FILEVERSION) ?? file?.FileVersion;
-                if (string.IsNullOrEmpty(fileVersion) && File.Exists(path))
-                    if (TryLoadFileVersion(path, out var v))
+                if (string.IsNullOrEmpty(fileVersion) && File.Exists(addl.ItemSpec))
+                    if (TryLoadFileVersion(addl.ItemSpec, out var v))
                         fileVersion = v;
 
                 runtimeFiles.Add(new RuntimeFile(path, assemblyVersion, fileVersion));
