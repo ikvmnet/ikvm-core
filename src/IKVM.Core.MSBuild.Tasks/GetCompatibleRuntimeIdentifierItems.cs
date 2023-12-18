@@ -120,7 +120,7 @@
         /// <returns></returns>
         public override bool Execute()
         {
-            MatchNearestItemGroups(TargetRuntimeIdentifiers.Split(';'));
+            MatchNearestItemGroups(TargetRuntimeIdentifiers.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries));
             return true;
         }
 
