@@ -12,5 +12,6 @@
     </PropertyGroup>
 
     <UsingTask TaskName="GenerateDepsFileExtensions" AssemblyFile="$(IkvmCoreMSBuildTaskAssembly)" TaskFactory="$(IkvmCoreMSBuildTaskFactory)" Condition="Exists('$(IkvmCoreMSBuildTaskAssembly)')" />
+    <UsingTask TaskName="GetCompatibleRuntimeIdentifierItems" AssemblyFile="$(IkvmCoreMSBuildTaskAssembly)" TaskFactory="$(IkvmCoreMSBuildTaskFactory)" Condition="Exists('$(IkvmCoreMSBuildTaskAssembly)')" />
 
 </Project>
