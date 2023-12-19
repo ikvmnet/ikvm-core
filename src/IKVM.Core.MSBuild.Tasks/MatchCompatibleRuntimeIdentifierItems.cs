@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.Immutable;
     using System.Linq;
     using System.Text.Json;
     using System.Text.Json.Serialization;
@@ -12,7 +13,7 @@
     /// <summary>
     /// For a grouping of items by key, each with a specified RuntimeIdentifier, choose the nearest matching item from the group.
     /// </summary>
-    public class GetCompatibleRuntimeIdentifierItems : Task
+    public class MatchCompatibleRuntimeIdentifierItems : Task
     {
 
         class RuntimesElement
@@ -29,6 +30,9 @@
             [JsonPropertyName("#import")]
             public string[] Imports { get; set; }
 
+            [JsonIgnore]
+            public ImmutableHashSet<string> ImportedBy { get; set; } = ImmutableHashSet<string>.Empty;
+
         }
 
         static Dictionary<string, RuntimeElement> runtimeJsonElement;
@@ -44,7 +48,7 @@
         /// <returns></returns>
         static Dictionary<string, RuntimeElement> GetRuntimeJson()
         {
-            using var stream = typeof(GetCompatibleRuntimeIdentifierItems).Assembly.GetManifestResourceStream("runtime.json");
+            using var stream = typeof(MatchCompatibleRuntimeIdentifierItems).Assembly.GetManifestResourceStream("runtime.json");
             var g = JsonSerializer.Deserialize<RuntimesElement>(stream);
             return g.Runtimes;
         }
@@ -54,7 +58,7 @@
         /// </summary>
         /// <param name="rid"></param>
         /// <returns></returns>
-        static IEnumerable<string> GetRuntimeIdentifierIterator(string rid)
+        static IEnumerable<string> GetImportsRecursive(string rid)
         {
             if (RuntimeJson.TryGetValue(rid, out var node) == false)
                 yield break;
@@ -64,23 +68,23 @@
             
             // return each imported identifier
             foreach (var i in node.Imports)
-                foreach (var j in GetRuntimeIdentifierIterator(i))
+                foreach (var j in GetImportsRecursive(i))
                     yield return j;
         }
 
         /// <summary>
-        /// Returns <c>true</c> if the given RID is parented by the specified parent RID.
+        /// Returns <c>true</c> if <paramref name="importRid"/> is imported directly or indirectly by <paramref name="rid"/>.
         /// </summary>
         /// <param name="rid"></param>
-        /// <param name="parentRid"></param>
+        /// <param name="importRid"></param>
         /// <returns></returns>
-        static bool IsParentedBy(string rid, string parentRid)
+        static bool IsImport(string rid, string importRid)
         {
-            return GetRuntimeIdentifierIterator(rid).Contains(parentRid);
+            return GetImportsRecursive(rid).Contains(importRid);
         }
 
         /// <summary>
-        /// Specified target runtime identifier.
+        /// Specified target runtime identifiers.
         /// </summary>
         [Required]
         public string TargetRuntimeIdentifiers { get; set; }
@@ -118,7 +122,7 @@
         /// <returns></returns>
         public override bool Execute()
         {
-            MatchNearestItemGroups(TargetRuntimeIdentifiers.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries));
+            MatchCompatibleItems(TargetRuntimeIdentifiers.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries));
             return true;
         }
 
@@ -127,16 +131,16 @@
         /// </summary>
         /// <param name="targetRids"></param>
         /// <exception cref="NotImplementedException"></exception>
-        void MatchNearestItemGroups(string[] targetRids)
+        void MatchCompatibleItems(ICollection<string> targetRids)
         {
             if (targetRids is null)
                 throw new ArgumentNullException(nameof(targetRids));
-            if (targetRids.Length == 0)
+            if (targetRids.Count == 0)
                 throw new ArgumentOutOfRangeException(nameof(targetRids));
 
             // group items and match group
             foreach (var group in Items.GroupBy(i => GroupKeyMetadataName != null ? (i.GetMetadata(GroupKeyMetadataName) ?? "") : ""))
-                MatchNearestItems(group, targetRids);
+                MatchCompatibleItems(group, targetRids);
         }
 
         /// <summary>
@@ -145,10 +149,10 @@
         /// <param name="items"></param>
         /// <param name="targetRids"></param>
         /// <exception cref="NotImplementedException"></exception>
-        void MatchNearestItems(IEnumerable<ITaskItem> items, string[] targetRids)
+        void MatchCompatibleItems(IEnumerable<ITaskItem> items, IEnumerable<string> targetRids)
         {
             foreach (var targetRid in targetRids)
-                MatchNearestItems(items, targetRid);
+                MatchCompatibleItems(items, targetRid);
 
             // if multiple items in the group were matched, set the unique match value to false
             var matchedItems = items.Where(i => i.GetMetadata(CompatibleMetadataName) == "true").ToList();
@@ -161,11 +165,11 @@
         /// </summary>
         /// <param name="items"></param>
         /// <param name="targetRid"></param>
-        void MatchNearestItems(IEnumerable<ITaskItem> items, string targetRid)
+        void MatchCompatibleItems(IEnumerable<ITaskItem> items, string targetRid)
         {
             foreach (var item in items)
                 if (item.GetMetadata(CompatibleMetadataName) != "true")
-                    item.SetMetadata(CompatibleMetadataName, IsMatchingItem(item, targetRid) ? "true" : "false");
+                    item.SetMetadata(CompatibleMetadataName, IsCompatible(item, targetRid) ? "true" : "false");
         }
 
         /// <summary>
@@ -174,9 +178,9 @@
         /// <param name="item"></param>
         /// <param name="targetRid"></param>
         /// <returns></returns>
-        bool IsMatchingItem(ITaskItem item, string targetRid)
+        bool IsCompatible(ITaskItem item, string targetRid)
         {
-            return IsParentedBy(item.GetMetadata(RuntimeIdentifierMetadataName), targetRid) || IsParentedBy(targetRid, item.GetMetadata(RuntimeIdentifierMetadataName));
+            return IsImport(item.GetMetadata(RuntimeIdentifierMetadataName), targetRid) || IsImport(targetRid, item.GetMetadata(RuntimeIdentifierMetadataName));
         }
 
     }

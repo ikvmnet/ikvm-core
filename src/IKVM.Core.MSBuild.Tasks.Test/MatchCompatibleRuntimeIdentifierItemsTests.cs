@@ -10,13 +10,13 @@ namespace IKVM.Core.MSBuild.Tasks.Test
 {
 
     [TestClass]
-    public class GetCompatibleRuntimeIdentifierItemsTests
+    public class MatchCompatibleRuntimeIdentifierItemsTests
     {
 
         [TestMethod]
         public void ShouldMatchSingleItemWithExactRid()
         {
-            var t = new GetCompatibleRuntimeIdentifierItems();
+            var t = new MatchCompatibleRuntimeIdentifierItems();
             t.TargetRuntimeIdentifiers = "win-x86";
             t.Items = new[]
             {
@@ -40,7 +40,7 @@ namespace IKVM.Core.MSBuild.Tasks.Test
         [TestMethod]
         public void ShouldMatchManyItemsWithMultipleRids()
         {
-            var t = new GetCompatibleRuntimeIdentifierItems();
+            var t = new MatchCompatibleRuntimeIdentifierItems();
             t.TargetRuntimeIdentifiers = "win-x86;win-x64";
             t.Items = new[]
             {
@@ -76,7 +76,7 @@ namespace IKVM.Core.MSBuild.Tasks.Test
         [TestMethod]
         public void ShouldMatchManyItemsWithCompatibleParent()
         {
-            var t = new GetCompatibleRuntimeIdentifierItems();
+            var t = new MatchCompatibleRuntimeIdentifierItems();
             t.TargetRuntimeIdentifiers = "win";
             t.Items = new[]
             {
@@ -112,7 +112,7 @@ namespace IKVM.Core.MSBuild.Tasks.Test
         [TestMethod]
         public void ShouldMatchSingleItemWithCompatibleChild()
         {
-            var t = new GetCompatibleRuntimeIdentifierItems();
+            var t = new MatchCompatibleRuntimeIdentifierItems();
             t.TargetRuntimeIdentifiers = "win-x86";
             t.Items = new[]
             {
