@@ -122,7 +122,7 @@
         /// <returns></returns>
         public override bool Execute()
         {
-            MatchCompatibleItems(TargetRuntimeIdentifiers.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries));
+            MatchCompatibleItems(TargetRuntimeIdentifiers.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Distinct());
             return true;
         }
 
@@ -130,13 +130,10 @@
         /// For each group of items defined by the GroupKey, append metadata
         /// </summary>
         /// <param name="targetRids"></param>
-        /// <exception cref="NotImplementedException"></exception>
-        void MatchCompatibleItems(ICollection<string> targetRids)
+        void MatchCompatibleItems(IEnumerable<string> targetRids)
         {
             if (targetRids is null)
                 throw new ArgumentNullException(nameof(targetRids));
-            if (targetRids.Count == 0)
-                throw new ArgumentOutOfRangeException(nameof(targetRids));
 
             // group items and match group
             foreach (var group in Items.GroupBy(i => GroupKeyMetadataName != null ? (i.GetMetadata(GroupKeyMetadataName) ?? "") : ""))
