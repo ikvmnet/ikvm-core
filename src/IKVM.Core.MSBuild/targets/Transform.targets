@@ -40,7 +40,7 @@
 
     <Target Name="WriteTransformValues" Condition=" '$(TargetFramework)' != '' ">
         <ItemGroup>
-            <_TransformValues Include="@(Transform->'%(Identity)=%(Value)')" />
+            <_TransformValues Include="@(TransformValues->'%(Identity)=%(Value)')" />
         </ItemGroup>
         <WriteLinesToFile File="$(IntermediateOutputPath)TransformValues.txt" Lines="@(_TransformValues)" WriteOnlyWhenDifferent="true" Overwrite="true" />
     </Target>
