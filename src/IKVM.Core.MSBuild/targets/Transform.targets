@@ -38,8 +38,18 @@
         </Task>
     </UsingTask>
 
-    <Target Name="Transform" BeforeTargets="BeforeBuild" Inputs="@(Transform)" Outputs="@(Transform->'%(TargetPath)')" Condition=" '$(TargetFramework)' != '' And '@(Transform)' != '' ">
+    <Target Name="Transform" Inputs="@(Transform)" Outputs="@(Transform->'%(TargetPath)')" Condition=" '$(TargetFramework)' != '' And '@(Transform)' != '' ">
         <Transform Items="@(Transform)" Parameters="@(TransformValues)" />
+        <ItemGroup>
+            <FileWrites Include="@(Transform->'%(TargetPath)')" />
+        </ItemGroup>
     </Target>
+    
+    <PropertyGroup>
+        <BuildDependsOn>
+            Transform;
+            $(BuildDependsOn);
+        </BuildDependsOn>
+    </PropertyGroup>
 
 </Project>
