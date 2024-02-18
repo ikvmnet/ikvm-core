@@ -38,7 +38,11 @@
         </Task>
     </UsingTask>
 
-    <Target Name="Transform" Inputs="@(Transform)" Outputs="@(Transform->'%(TargetPath)')" Condition=" '$(TargetFramework)' != '' And '@(Transform)' != '' ">
+    <Target Name="WriteTransformValues" Condition=" '$(TargetFramework)' != '' ">
+        <WriteLinesToFile File="$(IntermediateOutputPath)TransformValues.txt" WriteOnlyWhenDifferent="true" Overwrite="true" />
+    </Target>
+
+    <Target Name="Transform" DependsOnTargets="WriteTransformValues" Inputs="$(IntermediateOutputPath)TransformValues.txt;@(Transform)" Outputs="@(Transform->'%(TargetPath)')" Condition=" '$(TargetFramework)' != '' And '@(Transform)' != '' ">
         <Transform Items="@(Transform)" Parameters="@(TransformValues)" />
         <ItemGroup>
             <FileWrites Include="@(Transform->'%(TargetPath)')" />
@@ -47,6 +51,7 @@
     
     <PropertyGroup>
         <PrepareForBuildDependsOn>
+            WriteTransformValues;
             Transform;
             $(PrepareForBuildDependsOn);
         </PrepareForBuildDependsOn>
@@ -54,6 +59,7 @@
     
     <PropertyGroup>
         <BuildDependsOn>
+            WriteTransformValues;
             Transform;
             $(BuildDependsOn);
         </BuildDependsOn>
