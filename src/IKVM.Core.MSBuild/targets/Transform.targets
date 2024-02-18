@@ -46,6 +46,13 @@
     </Target>
     
     <PropertyGroup>
+        <PrepareForBuildDependsOn>
+            Transform;
+            $(PrepareForBuildDependsOn);
+        </PrepareForBuildDependsOn>
+    </PropertyGroup>
+    
+    <PropertyGroup>
         <BuildDependsOn>
             Transform;
             $(BuildDependsOn);
