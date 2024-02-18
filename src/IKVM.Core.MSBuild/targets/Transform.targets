@@ -39,7 +39,10 @@
     </UsingTask>
 
     <Target Name="WriteTransformValues" Condition=" '$(TargetFramework)' != '' ">
-        <WriteLinesToFile File="$(IntermediateOutputPath)TransformValues.txt" WriteOnlyWhenDifferent="true" Overwrite="true" />
+        <ItemGroup>
+            <_TransformValues Include="@(Transform->'%(Identity)=%(Value)')" />
+        </ItemGroup>
+        <WriteLinesToFile File="$(IntermediateOutputPath)TransformValues.txt" Lines="@(_TransformValues)" WriteOnlyWhenDifferent="true" Overwrite="true" />
     </Target>
 
     <Target Name="Transform" DependsOnTargets="WriteTransformValues" Inputs="$(IntermediateOutputPath)TransformValues.txt;@(Transform)" Outputs="@(Transform->'%(TargetPath)')" Condition=" '$(TargetFramework)' != '' And '@(Transform)' != '' ">
