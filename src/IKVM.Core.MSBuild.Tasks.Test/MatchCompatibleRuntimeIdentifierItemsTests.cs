@@ -113,7 +113,7 @@ namespace IKVM.Core.MSBuild.Tasks.Test
         public void ShouldMatchSingleItemWithCompatibleChild()
         {
             var t = new MatchCompatibleRuntimeIdentifierItems();
-            t.TargetRuntimeIdentifiers = "win-x86";
+            t.TargetRuntimeIdentifiers = "win-x86;win-x64";
             t.Items = new[]
             {
                 new TaskItem("itemA", new Dictionary<string,string>()
