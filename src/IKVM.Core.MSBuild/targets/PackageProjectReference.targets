@@ -46,8 +46,8 @@
                 <Properties>%(_PackageProjectReference.SetConfiguration);%(_PackageProjectReference.SetPlatform)</Properties>
             </_PackageProjectReferencesToTarget>
         </ItemGroup>
-        <MSBuild Projects="@(_PackageProjectReferencesToTarget)" Targets="Build" BuildInParallel="$(BuildInParallel)" RemoveProperties="$(_GlobalPropertiesToRemoveFromProjectReferences);TargetFramework;RuntimeIdentifier;DesignTimeBuild" />
-        <MSBuild Projects="@(_PackageProjectReferencesToTarget)" Targets="_CleanPackageFiles;Pack;GetPackageOutputPath" BuildInParallel="$(BuildInParallel)" RemoveProperties="$(_GlobalPropertiesToRemoveFromProjectReferences);TargetFramework;RuntimeIdentifier;DesignTimeBuild" RebaseOutputs="true">
+        <MSBuild Projects="@(_PackageProjectReferencesToTarget)" Targets="Build" BuildInParallel="$(BuildInParallel)" RemoveProperties="$(_GlobalPropertiesToRemoveFromProjectReferences);TargetFramework;RuntimeIdentifier;DesignTimeBuild;BuildProjectReferences" />
+        <MSBuild Projects="@(_PackageProjectReferencesToTarget)" Targets="_CleanPackageFiles;Pack;GetPackageOutputPath" BuildInParallel="$(BuildInParallel)" RemoveProperties="$(_GlobalPropertiesToRemoveFromProjectReferences);TargetFramework;RuntimeIdentifier;DesignTimeBuild;BuildProjectReferences" RebaseOutputs="true">
             <Output TaskParameter="TargetOutputs" ItemName="_ResolvedPackageOutputPath" />
         </MSBuild>
         <ItemGroup>
