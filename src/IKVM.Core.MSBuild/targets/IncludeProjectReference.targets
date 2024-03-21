@@ -97,7 +97,7 @@
         </CollectIncludeProjectReferenceItemsDependsOn>
     </PropertyGroup>
 
-    <PropertyGroup>s
+    <PropertyGroup>
         <AssignTargetPathsDependsOn>
             $(AssignTargetPathsDependsOn);
             CollectIncludeProjectReferenceItems;
