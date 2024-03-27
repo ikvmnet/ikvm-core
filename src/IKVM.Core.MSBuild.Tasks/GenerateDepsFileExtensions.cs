@@ -44,7 +44,7 @@
         /// <param name="context"></param>
         void WriteDepsFile(DependencyContext context)
         {
-            using var wrt = File.OpenWrite(DepsFilePath);
+            using var wrt = File.Open(DepsFilePath, FileMode.Create);
             new DependencyContextWriter().Write(context, wrt);
         }
 
