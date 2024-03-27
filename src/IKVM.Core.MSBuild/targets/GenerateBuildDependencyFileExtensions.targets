@@ -3,11 +3,11 @@
         <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
     </PropertyGroup>
 
-    <Target Name="GenerateBuildDependencyFileExtensions" AfterTargets="GenerateBuildDependencyFile" Condition=" '$(GenerateDependencyFile)' == 'true' ">
+    <Target Name="GenerateBuildDependencyFileExtensions" AfterTargets="GenerateBuildDependencyFile" Condition=" '$(GenerateDependencyFile)' == 'true' And '$(ProjectDepsFilePath)' != '' ">
         <GenerateDepsFileExtensions DepsFilePath="$(ProjectDepsFilePath)" AdditionalRuntimeLibraryAssets="@(AdditionalRuntimeLibraryAssets)" AdditionalRuntimeNativeAssets="@(AdditionalRuntimeNativeAssets)" />
     </Target>
 
-    <Target Name="GeneratePublishDependencyFileExtensions" AfterTargets="GeneratePublishDependencyFile" BeforeTargets="ComputeFilesToPublish" Condition=" '$(GenerateDependencyFile)' == 'true' ">
+    <Target Name="GeneratePublishDependencyFileExtensions" AfterTargets="GeneratePublishDependencyFile" BeforeTargets="ComputeFilesToPublish" Condition=" '$(GenerateDependencyFile)' == 'true' And '$(IntermediateDepsFilePath)' != '' ">
         <GenerateDepsFileExtensions DepsFilePath="$(IntermediateDepsFilePath)" AdditionalRuntimeLibraryAssets="@(AdditionalRuntimeLibraryAssets)" AdditionalRuntimeNativeAssets="@(AdditionalRuntimeNativeAssets)" />
     </Target>
     
