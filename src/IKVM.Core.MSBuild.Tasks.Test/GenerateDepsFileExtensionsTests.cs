@@ -15,31 +15,37 @@ namespace IKVM.Core.MSBuild.Tasks.Test
         [TestMethod]
         public void Foo()
         {
+            var s = Path.Combine(Path.GetDirectoryName(typeof(GenerateDepsFileExtensionsTests).Assembly.Location), "Sample.deps.json");
+            var d = Path.GetTempFileName();
+            File.Copy(s, d, true);
+
             var t = new GenerateDepsFileExtensions();
-            t.DepsFilePath = Path.Combine(Path.GetDirectoryName(typeof(GenerateDepsFileExtensionsTests).Assembly.Location), "Sample.deps.json");
+            t.DepsFilePath = d;
             t.AdditionalRuntimeNativeAssets = new[]
             {
-                new TaskItem("runtimes/magicrid/native/foo.bar", new Dictionary<string,string>()
+                new TaskItem("runtimes/win-x64/native/foo.bar.dll", new Dictionary<string,string>()
                 {
+                    ["AssetPath"] = "runtimes/win-x64/native/foo.bar.dll",
                     ["LibraryName"] = "TestPackage",
                     ["LibraryVersion"] = "1.2.3",
                     ["LibraryType"] = "project",
-                    ["Runtime"] = "magicrid",
+                    ["Runtime"] = "win-x64",
                 }),
             };
             t.AdditionalRuntimeLibraryAssets = new[]
             {
-                new TaskItem("runtimes/magicrid/lib/net6.0/foo.bar", new Dictionary<string,string>()
+                new TaskItem("runtimes/win-x64/lib/net6.0/foo.bar.dll", new Dictionary<string,string>()
                 {
+                    ["AssetPath"] = "runtimes/win-x64/lib/net6.0/foo.bar.dll",
                     ["LibraryName"] = "TestPackage",
                     ["LibraryVersion"] = "1.2.3",
                     ["LibraryType"] = "project",
-                    ["Runtime"] = "magicrid",
+                    ["Runtime"] = "win-x64",
                 })
             };
             t.Execute();
 
-            var j = JsonDocument.Parse(File.OpenRead(t.DepsFilePath));
+            var j = JsonDocument.Parse(File.OpenRead(d));
             var z = j.RootElement.ToString();
         }
 
