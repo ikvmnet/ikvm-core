@@ -191,13 +191,13 @@
                     runtimeFiles.Remove(file);
 
                 var assemblyVersion = addl.GetMetadata(METADATA_LIBRARY_ASSET_ASSEMBLYVERSION) ?? file?.AssemblyVersion;
-                if (string.IsNullOrEmpty(assemblyVersion) && File.Exists(addl.ItemSpec))
-                    if (TryLoadAssemblyVersion(addl.ItemSpec, out var v))
+                if (string.IsNullOrEmpty(assemblyVersion))
+                    if (TryLoadAssemblyVersion(addl, out var v))
                         assemblyVersion = v;
 
                 var fileVersion = addl.GetMetadata(METADATA_LIBRARY_ASSET_FILEVERSION) ?? file?.FileVersion;
-                if (string.IsNullOrEmpty(fileVersion) && File.Exists(addl.ItemSpec))
-                    if (TryLoadFileVersion(addl.ItemSpec, out var v))
+                if (string.IsNullOrEmpty(fileVersion))
+                    if (TryLoadFileVersion(addl, out var v))
                         fileVersion = v;
 
                 runtimeFiles.Add(new RuntimeFile(path, assemblyVersion, fileVersion));
@@ -242,19 +242,37 @@
                     runtimeFiles.Remove(file);
 
                 var assemblyVersion = addl.GetMetadata(METADATA_LIBRARY_ASSET_ASSEMBLYVERSION) ?? file?.AssemblyVersion;
-                if (string.IsNullOrEmpty(assemblyVersion) && File.Exists(addl.ItemSpec))
-                    if (TryLoadAssemblyVersion(addl.ItemSpec, out var v))
+                if (string.IsNullOrEmpty(assemblyVersion))
+                    if (TryLoadAssemblyVersion(addl, out var v))
                         assemblyVersion = v;
 
                 var fileVersion = addl.GetMetadata(METADATA_LIBRARY_ASSET_FILEVERSION) ?? file?.FileVersion;
-                if (string.IsNullOrEmpty(fileVersion) && File.Exists(addl.ItemSpec))
-                    if (TryLoadFileVersion(addl.ItemSpec, out var v))
+                if (string.IsNullOrEmpty(fileVersion))
+                    if (TryLoadFileVersion(addl, out var v))
                         fileVersion = v;
 
                 runtimeFiles.Add(new RuntimeFile(path, assemblyVersion, fileVersion));
             }
 
             return new RuntimeAssetGroup(runtime, runtimeFiles);
+        }
+
+        /// <summary>
+        /// Attempts to get the assembly version of an item.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="assemblyVersion"></param>
+        /// <returns></returns>
+        bool TryLoadAssemblyVersion(ITaskItem item, out string assemblyVersion)
+        {
+            if (File.Exists(item.ItemSpec))
+                return TryLoadAssemblyVersion(item.ItemSpec, out assemblyVersion);
+
+            if (item.GetMetadata("FullPath") is string fullPath && File.Exists(fullPath))
+                return TryLoadAssemblyVersion(fullPath, out assemblyVersion);
+
+            assemblyVersion = null;
+            return false;
         }
 
         /// <summary>
@@ -275,6 +293,25 @@
                 assemblyVersion = null;
                 return false;
             }
+        }
+
+
+        /// <summary>
+        /// Attempts to get the file version of an item.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="assemblyVersion"></param>
+        /// <returns></returns>
+        bool TryLoadFileVersion(ITaskItem item, out string fileVersion)
+        {
+            if (File.Exists(item.ItemSpec))
+                return TryLoadFileVersion(item.ItemSpec, out fileVersion);
+
+            if (item.GetMetadata("FullPath") is string fullPath && File.Exists(fullPath))
+                return TryLoadFileVersion(fullPath, out fileVersion);
+
+            fileVersion = null;
+            return false;
         }
 
         /// <summary>
