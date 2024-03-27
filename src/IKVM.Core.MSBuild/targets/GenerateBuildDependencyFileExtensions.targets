@@ -7,7 +7,7 @@
         <GenerateDepsFileExtensions DepsFilePath="$(ProjectDepsFilePath)" AdditionalRuntimeLibraryAssets="@(AdditionalRuntimeLibraryAssets)" AdditionalRuntimeNativeAssets="@(AdditionalRuntimeNativeAssets)" />
     </Target>
 
-    <Target Name="GeneratePublishDependencyFileExtensions" AfterTargets="GeneratePublishDependencyFile" Condition=" '$(TargetFramework)' != '' And '$(GenerateDependencyFile)' == 'true' ">
+    <Target Name="GeneratePublishDependencyFileExtensions" AfterTargets="GeneratePublishDependencyFile" BeforeTargets="ComputeFilesToPublish" Condition=" '$(TargetFramework)' != '' And '$(GenerateDependencyFile)' == 'true' ">
         <GenerateDepsFileExtensions DepsFilePath="$(IntermediateDepsFilePath)" AdditionalRuntimeLibraryAssets="@(AdditionalRuntimeLibraryAssets)" AdditionalRuntimeNativeAssets="@(AdditionalRuntimeNativeAssets)" />
     </Target>
     
