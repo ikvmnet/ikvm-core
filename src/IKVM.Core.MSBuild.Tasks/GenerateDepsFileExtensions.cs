@@ -57,6 +57,7 @@
             new DependencyContextWriter().Write(context, wrt);
         }
 
+        /// <inheritdoc />
         public override bool Execute()
         {
             WriteDepsFile(BuildDependencyContext(ReadDepsFile()));
@@ -197,10 +198,9 @@
                 // normalize Windows paths
                 path = path.Replace('\\', '/');
 
-                // find existing runtime file and remove
+                // find existing file and clear duplicates
                 var file = runtimeFiles.FirstOrDefault(i => (i.Path ?? "") == path);
-                if (file != null)
-                    runtimeFiles.Remove(file);
+                runtimeFiles.RemoveAll(i => (i.Path ?? "") == path);
 
                 var assemblyVersion = addl.GetMetadata(METADATA_LIBRARY_ASSET_ASSEMBLYVERSION) ?? file?.AssemblyVersion;
                 if (string.IsNullOrEmpty(assemblyVersion))
@@ -251,10 +251,9 @@
                 // normalize Windows paths
                 path = path.Replace('\\', '/');
 
-                // find existing runtime file and remove
+                // find existing file and clear duplicates
                 var file = runtimeFiles.FirstOrDefault(i => (i.Path ?? "") == path);
-                if (file != null)
-                    runtimeFiles.Remove(file);
+                runtimeFiles.RemoveAll(i => (i.Path ?? "") == path);
 
                 var assemblyVersion = addl.GetMetadata(METADATA_LIBRARY_ASSET_ASSEMBLYVERSION) ?? file?.AssemblyVersion;
                 if (string.IsNullOrEmpty(assemblyVersion))
