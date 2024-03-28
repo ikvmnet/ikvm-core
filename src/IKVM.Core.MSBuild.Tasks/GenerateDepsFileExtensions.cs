@@ -21,11 +21,20 @@
         const string METADATA_LIBRARY_ASSET_ASSEMBLYVERSION = "AssemblyVersion";
         const string METADATA_LIBRARY_ASSET_FILEVERSION = "FileVersion";
 
+        /// <summary>
+        /// Path to existing .deps.json file to rewrite.
+        /// </summary>
         [Required]
         public string DepsFilePath { get; set; }
 
+        /// <summary>
+        /// Additional library assets.
+        /// </summary>
         public ITaskItem[] AdditionalRuntimeLibraryAssets { get; set; } = Array.Empty<ITaskItem>();
 
+        /// <summary>
+        /// Additional native assets.
+        /// </summary>
         public ITaskItem[] AdditionalRuntimeNativeAssets { get; set; } = Array.Empty<ITaskItem>();
 
         /// <summary>
