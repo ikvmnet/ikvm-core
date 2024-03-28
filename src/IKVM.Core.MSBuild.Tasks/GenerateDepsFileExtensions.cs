@@ -90,9 +90,9 @@
         IEnumerable<RuntimeLibrary> BuildRuntimeLibrariesWithAdditional(DependencyContext context)
         {
             var names = context.RuntimeLibraries
-                .Select(i => i.Name)
-                .Concat(AdditionalRuntimeLibraryAssets.Select(i => i.GetMetadata(METADATA_LIBRARY_NAME)).Where(i => i != null))
-                .Concat(AdditionalRuntimeNativeAssets.Select(i => i.GetMetadata(METADATA_LIBRARY_NAME)).Where(i => i != null))
+                .Select(i => i.Name ?? "")
+                .Concat(AdditionalRuntimeLibraryAssets.Select(i => i.GetMetadata(METADATA_LIBRARY_NAME) ?? "").Where(i => i != ""))
+                .Concat(AdditionalRuntimeNativeAssets.Select(i => i.GetMetadata(METADATA_LIBRARY_NAME) ?? "").Where(i => i != ""))
                 .Distinct();
             foreach (var name in names)
                 yield return BuildRuntimeLibraryWithAdditional(context, name);
@@ -112,7 +112,7 @@
             var dependencies = new List<Dependency>();
 
             // merge in existing items
-            var i = context.RuntimeLibraries.FirstOrDefault(i => i.Name == name);
+            var i = context.RuntimeLibraries.FirstOrDefault(i => (i.Name ?? "") == name);
             if (i != null)
             {
                 version = i.Version;
@@ -126,7 +126,7 @@
             }
 
             // merge in new items
-            foreach (var addl in AdditionalRuntimeLibraryAssets.Where(i => i.GetMetadata(METADATA_LIBRARY_NAME) == name))
+            foreach (var addl in AdditionalRuntimeLibraryAssets.Where(i => (i.GetMetadata(METADATA_LIBRARY_NAME) ?? "") == name))
             {
                 if (addl.GetMetadata(METADATA_LIBRARY_VERSION) is string _version and not null)
                     version ??= _version;
@@ -135,7 +135,7 @@
             }
 
             // merge in new items
-            foreach (var addl in AdditionalRuntimeNativeAssets.Where(i => i.GetMetadata(METADATA_LIBRARY_NAME) == name))
+            foreach (var addl in AdditionalRuntimeNativeAssets.Where(i => (i.GetMetadata(METADATA_LIBRARY_NAME) ?? "") == name))
             {
                 if (addl.GetMetadata(METADATA_LIBRARY_VERSION) is string _version and not null)
                     version ??= _version;
@@ -158,8 +158,8 @@
         IEnumerable<RuntimeAssetGroup> BuildRuntimeLibraryRuntimeAssemblyGroupsWithAdditional(DependencyContext context, string name)
         {
             var keys = context.RuntimeLibraries
-                .SelectMany(i => i.RuntimeAssemblyGroups.Select(j => new { i.Name, j.Runtime }))
-                .Concat(AdditionalRuntimeLibraryAssets.Select(i => new { Name = i.GetMetadata(METADATA_LIBRARY_NAME), Runtime = i.GetMetadata(METADATA_LIBRARY_ASSET_RUNTIME) }).Where(i => i.Name != null))
+                .SelectMany(i => i.RuntimeAssemblyGroups.Select(j => new { i.Name, Runtime = j.Runtime ?? "" }))
+                .Concat(AdditionalRuntimeLibraryAssets.Select(i => new { Name = i.GetMetadata(METADATA_LIBRARY_NAME) ?? "", Runtime = i.GetMetadata(METADATA_LIBRARY_ASSET_RUNTIME) ?? "" }).Where(i => i.Name != ""))
                 .Where(i => i.Name == name)
                 .Distinct();
             foreach (var key in keys)
@@ -170,23 +170,26 @@
         {
             var runtimeFiles = new List<RuntimeFile>();
 
-            var i = context.RuntimeLibraries.Where(i => i.Name == name).SelectMany(i => i.RuntimeAssemblyGroups).FirstOrDefault(i => i.Runtime == runtime);
+            var i = context.RuntimeLibraries.Where(i => (i.Name ?? "") == name).SelectMany(i => i.RuntimeAssemblyGroups).FirstOrDefault(i => (i.Runtime ?? "") == runtime);
             if (i != null)
             {
                 runtimeFiles.AddRange(i.RuntimeFiles);
             }
 
             // merge in new items
-            foreach (var addl in AdditionalRuntimeLibraryAssets.Where(i => i.GetMetadata(METADATA_LIBRARY_NAME) == name && i.GetMetadata(METADATA_LIBRARY_ASSET_RUNTIME) == runtime))
+            foreach (var addl in AdditionalRuntimeLibraryAssets.Where(i => (i.GetMetadata(METADATA_LIBRARY_NAME) ?? "") == name && (i.GetMetadata(METADATA_LIBRARY_ASSET_RUNTIME) ?? "") == runtime))
             {
-                var path = addl.GetMetadata(METADATA_LIBRARY_ASSET_PATH);
+                var path = addl.GetMetadata(METADATA_LIBRARY_ASSET_PATH) ?? "";
                 if (string.IsNullOrEmpty(path))
                     path = addl.ItemSpec;
                 if (string.IsNullOrEmpty(path))
-                    path = null;
+                    path = "";
+
+                // normalize Windows paths
+                path = path.Replace('\\', '/');
 
                 // find existing runtime file and remove
-                var file = runtimeFiles.FirstOrDefault(i => i.Path == path);
+                var file = runtimeFiles.FirstOrDefault(i => (i.Path ?? "") == path);
                 if (file != null)
                     runtimeFiles.Remove(file);
 
@@ -209,8 +212,8 @@
         IEnumerable<RuntimeAssetGroup> BuildRuntimeLibraryNativeAssetGroupsWithAdditional(DependencyContext context, string name)
         {
             var keys = context.RuntimeLibraries
-                .SelectMany(i => i.NativeLibraryGroups.Select(j => new { i.Name, j.Runtime }))
-                .Concat(AdditionalRuntimeNativeAssets.Select(i => new { Name = i.GetMetadata(METADATA_LIBRARY_NAME), Runtime = i.GetMetadata(METADATA_LIBRARY_ASSET_RUNTIME) }).Where(i => i.Name != null))
+                .SelectMany(i => i.NativeLibraryGroups.Select(j => new { Name = i.Name ?? "", Runtime = j.Runtime ?? "" }))
+                .Concat(AdditionalRuntimeNativeAssets.Select(i => new { Name = i.GetMetadata(METADATA_LIBRARY_NAME) ?? "", Runtime = i.GetMetadata(METADATA_LIBRARY_ASSET_RUNTIME) ?? "" }).Where(i => i.Name != ""))
                 .Where(i => i.Name == name)
                 .Distinct();
             foreach (var key in keys)
@@ -221,23 +224,26 @@
         {
             var runtimeFiles = new List<RuntimeFile>();
 
-            var i = context.RuntimeLibraries.Where(i => i.Name == name).SelectMany(i => i.NativeLibraryGroups).FirstOrDefault(i => i.Runtime == runtime);
+            var i = context.RuntimeLibraries.Where(i => (i.Name ?? "") == name).SelectMany(i => i.NativeLibraryGroups).FirstOrDefault(i => (i.Runtime ?? "") == runtime);
             if (i != null)
             {
                 runtimeFiles.AddRange(i.RuntimeFiles);
             }
 
             // merge in new items
-            foreach (var addl in AdditionalRuntimeNativeAssets.Where(i => i.GetMetadata(METADATA_LIBRARY_NAME) == name && i.GetMetadata(METADATA_LIBRARY_ASSET_RUNTIME) == runtime))
+            foreach (var addl in AdditionalRuntimeNativeAssets.Where(i => (i.GetMetadata(METADATA_LIBRARY_NAME) ?? "") == name && (i.GetMetadata(METADATA_LIBRARY_ASSET_RUNTIME) ?? "") == runtime))
             {
-                var path = addl.GetMetadata(METADATA_LIBRARY_ASSET_PATH);
+                var path = addl.GetMetadata(METADATA_LIBRARY_ASSET_PATH) ?? "";
                 if (string.IsNullOrEmpty(path))
                     path = addl.ItemSpec;
                 if (string.IsNullOrEmpty(path))
-                    path = null;
+                    path = "";
+
+                // normalize Windows paths
+                path = path.Replace('\\', '/');
 
                 // find existing runtime file and remove
-                var file = runtimeFiles.FirstOrDefault(i => i.Path == path);
+                var file = runtimeFiles.FirstOrDefault(i => (i.Path ?? "") == path);
                 if (file != null)
                     runtimeFiles.Remove(file);
 

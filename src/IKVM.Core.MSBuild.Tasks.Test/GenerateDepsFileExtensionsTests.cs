@@ -13,7 +13,7 @@ namespace IKVM.Core.MSBuild.Tasks.Test
     {
 
         [TestMethod]
-        public void Foo()
+        public void CanGenerateSampleDeps()
         {
             var s = Path.Combine(Path.GetDirectoryName(typeof(GenerateDepsFileExtensionsTests).Assembly.Location), "Sample.deps.json");
             var d = Path.GetTempFileName();
@@ -29,7 +29,7 @@ namespace IKVM.Core.MSBuild.Tasks.Test
                     ["LibraryName"] = "TestPackage",
                     ["LibraryVersion"] = "1.2.3",
                     ["LibraryType"] = "project",
-                    ["Runtime"] = "win-x64",
+                    ["Runtime"] = "",
                 }),
             };
             t.AdditionalRuntimeLibraryAssets = new[]
@@ -40,7 +40,7 @@ namespace IKVM.Core.MSBuild.Tasks.Test
                     ["LibraryName"] = "TestPackage",
                     ["LibraryVersion"] = "1.2.3",
                     ["LibraryType"] = "project",
-                    ["Runtime"] = "win-x64",
+                    ["Runtime"] = "",
                 })
             };
             t.Execute();
