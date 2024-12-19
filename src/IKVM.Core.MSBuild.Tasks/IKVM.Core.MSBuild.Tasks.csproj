@@ -11,11 +11,10 @@
         <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.9.0" />
         <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="7.0.0" GeneratePathProperty="true" />
         <PackageReference Include="System.Reflection.Metadata" Version="7.0.2" GeneratePathProperty="true" />
-        <PackageReference Include="Microsoft.NETCore.Platforms" Version="8.0.0-preview.7.23375.6" GeneratePathProperty="true" />
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="$(PkgMicrosoft_NETCore_Platforms)\runtime.json" LogicalName="runtime.json" Link="runtime.json" />
+        <EmbeddedResource Include="$(RuntimeIdentifierGraphPath)" LogicalName="runtime.json" Link="runtime.json" />
     </ItemGroup>
 
     <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.targets" />
