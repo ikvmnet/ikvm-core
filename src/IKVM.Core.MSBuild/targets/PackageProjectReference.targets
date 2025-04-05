@@ -12,7 +12,9 @@
     -->
 
     <Target Name="GetPackageOutputPath" DependsOnTargets="_GetAbsoluteOutputPathsForPack" Returns="$(PackageOutputAbsolutePath)">
-
+        <PropertyGroup>
+            <PackageOutputAbsolutePath>$([MSBuild]::EnsureTrailingSlash('$(PackageOutputAbsolutePath)'))</PackageOutputAbsolutePath>
+        </PropertyGroup>
     </Target>
 
     <Target Name="AssignPackageProjectConfiguration" Condition=" '$(DesignTimeBuild)' != 'true' And '@(PackageProjectReference)' != '' " >
@@ -51,7 +53,7 @@
             <Output TaskParameter="TargetOutputs" ItemName="_ResolvedPackageOutputPath" />
         </MSBuild>
         <ItemGroup>
-            <_PackageProjectReferenceItemsInput Include="%(_ResolvedPackageOutputPath.Identity)\*.nupkg;%(_ResolvedPackageOutputPath.Identity)\*.snupkg">
+            <_PackageProjectReferenceItemsInput Include="%(_ResolvedPackageOutputPath.Identity)*.nupkg;%(_ResolvedPackageOutputPath.Identity)*.snupkg">
                 <ProjectName>%(_ResolvedPackageOutputPath.ProjectName)</ProjectName>
                 <PackageTargetPath>%(_ResolvedPackageOutputPath.PackageTargetPath)</PackageTargetPath>
                 <PackagePackagePath>%(_ResolvedPackageOutputPath.PackagePackagePath)</PackagePackagePath>
