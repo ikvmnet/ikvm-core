@@ -3,12 +3,18 @@
         <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
     </PropertyGroup>
 
-    <Target Name="GenerateBuildDependencyFileExtensions" AfterTargets="GenerateBuildDependencyFile" Condition=" '$(GenerateDependencyFile)' == 'true' And '$(ProjectDepsFilePath)' != '' ">
+    <PropertyGroup>
+        <GenerateDependencyFileExtensionsDependsOn>
+            $(GenerateDependencyFileExtensionsDependsOn);
+        </GenerateDependencyFileExtensionsDependsOn>
+    </PropertyGroup>
+
+    <Target Name="GenerateBuildDependencyFileExtensions" AfterTargets="GenerateBuildDependencyFile" DependsOnTargets="$(GenerateDependencyFileExtensionsDependsOn)" Condition=" '$(GenerateDependencyFile)' == 'true' And '$(ProjectDepsFilePath)' != '' ">
         <GenerateDepsFileExtensions DepsFilePath="$(ProjectDepsFilePath)" AdditionalRuntimeLibraryAssets="@(AdditionalRuntimeLibraryAssets)" AdditionalRuntimeNativeAssets="@(AdditionalRuntimeNativeAssets)" />
     </Target>
 
-    <Target Name="GeneratePublishDependencyFileExtensions" AfterTargets="GeneratePublishDependencyFile" BeforeTargets="ComputeFilesToPublish" Condition=" '$(GenerateDependencyFile)' == 'true' And '$(IntermediateDepsFilePath)' != '' ">
+    <Target Name="GeneratePublishDependencyFileExtensions" AfterTargets="GeneratePublishDependencyFile" BeforeTargets="ComputeFilesToPublish" DependsOnTargets="$(GenerateDependencyFileExtensionsDependsOn)" Condition=" '$(GenerateDependencyFile)' == 'true' And '$(IntermediateDepsFilePath)' != '' ">
         <GenerateDepsFileExtensions DepsFilePath="$(IntermediateDepsFilePath)" AdditionalRuntimeLibraryAssets="@(AdditionalRuntimeLibraryAssets)" AdditionalRuntimeNativeAssets="@(AdditionalRuntimeNativeAssets)" />
     </Target>
-    
+
 </Project>
